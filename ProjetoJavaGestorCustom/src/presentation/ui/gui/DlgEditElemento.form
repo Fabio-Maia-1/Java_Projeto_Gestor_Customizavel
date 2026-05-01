@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="resizable" type="boolean" value="false"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="3"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnCancelar" min="-2" pref="103" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnConfirmar" min="-2" pref="103" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="lblColuna2" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="lblColuna3" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="lblColuna4" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="txtColuna1" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="lblColuna1" alignment="1" min="-2" pref="280" max="-2" attributes="0"/>
+                  <Component id="txtColuna2" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="txtColuna3" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="txtColuna4" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="lblColuna6" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="lblColuna7" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="lblColuna8" alignment="1" min="-2" pref="278" max="-2" attributes="0"/>
+                  <Component id="txtColuna5" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="lblColuna5" alignment="1" min="-2" pref="280" max="-2" attributes="0"/>
+                  <Component id="txtColuna6" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="txtColuna7" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+                  <Component id="txtColuna8" alignment="1" min="-2" pref="288" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="17" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="lblColuna1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna4" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="lblColuna5" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna5" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna7" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna7" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="lblColuna8" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtColuna8" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="38" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="btnCancelar" pref="36" max="32767" attributes="0"/>
+                  <Component id="btnConfirmar" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JButton" name="btnConfirmar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Confirmar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConfirmarActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnCancelar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cancelar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 1:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna1">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 2:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna2">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 3:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna3">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 4:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna4">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 5:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna5">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 6:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna6">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna7">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 7:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna7">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblColuna8">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Coluna 8:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtColuna8">
+    </Component>
+  </SubComponents>
+</Form>
