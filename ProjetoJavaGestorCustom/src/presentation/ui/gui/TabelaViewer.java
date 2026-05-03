@@ -5,9 +5,11 @@
 package presentation.ui.gui;
 
 import business.model.ArrayListObservable;
-import business.model.ArrayListBasedTableModel;
+import business.model.ElementoTableModel;
 import business.model.Elemento;
 import business.model.Tabela;
+import business.service.ElementoService;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,23 +20,33 @@ public class TabelaViewer extends javax.swing.JFrame {
     
     private ArrayListObservable<Elemento> listaElementos;
     private Tabela tabelaBase; //Para saber os nomes de cada coluna
+    public Connection ligacao = null;
+    private ElementoService elementoService = null;
 
     /**
      * Creates new form TabelaViewer
      */
-    public TabelaViewer(Tabela tabela) {
+    public TabelaViewer(Tabela tabela, Connection ligacao) {
         initComponents();
+        setLocationRelativeTo(null);//Janela aparece no meio do ecrã
+        this.ligacao = ligacao;
         this.tabelaBase = tabela; //Para saber os nomes de cada coluna
+        
         lblTitulo.setText("    " + tabela.getNomeTabela().toUpperCase()); //Escrever titulo do jFrame
         this.setTitle("    " + tabela.getNomeTabela().toUpperCase());//Escrever nome da tabela na barra superior do JFrame
-        listaElementos = new ArrayListObservable<>();
-        setLocationRelativeTo(null);//Janela aparece no meio do ecrã
+        
+        try { //Atualizar tabela com elementos da base de dados
+            elementoService = new ElementoService(ligacao);
+            listaElementos = elementoService.fillAll(tabelaBase); 
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        
         tblTabelaCustom.getColumnModel().getColumn(0).setPreferredWidth(58); //Largura da 1ª coluna
         
         //Codigo para o table model
-        ArrayListBasedTableModel TableModel = new ArrayListBasedTableModel(Tabela.class, listaElementos, tabela);
-        tblTabelaCustom.setModel(TableModel);
-        
+        ElementoTableModel TableModel = new ElementoTableModel(Tabela.class, listaElementos, tabela);
+        tblTabelaCustom.setModel(TableModel);   
     }
 
     /**
@@ -108,6 +120,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnApagar.addActionListener(this::btnApagarActionPerformed);
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(this::btnEditarActionPerformed);
 
         btnAdicionar.setText("Adicionar");
         btnAdicionar.addActionListener(this::btnAdicionarActionPerformed);
@@ -178,18 +191,32 @@ public class TabelaViewer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        DlgEditElemento editorElemento = new DlgEditElemento(this, true, tabelaBase);
+        DlgEditElemento editorElemento = new DlgEditElemento(this, true, tabelaBase, ligacao);
         editorElemento.setVisible(true);
 
         //Só será executado quando o dialog fechar
         if(editorElemento.getBotaoPressionado() == DlgEditElemento.CONFIRMAR){
             Elemento novoElemento = editorElemento.getElemento();
             listaElementos.add(novoElemento);
+            
+            try { //Passar para a base de dados
+                elementoService = new ElementoService(ligacao);
+                elementoService.guardar(novoElemento, tabelaBase); //Nova row na table associada ao elemento
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         if(tblTabelaCustom.getSelectedRow() > -1){
+            try { //Apagar da table de acordo com o index da row selecionada
+                elementoService = new ElementoService(ligacao);
+                Elemento elemento = listaElementos.get(tblTabelaCustom.getSelectedRow());
+                elementoService.apagarRow(elemento, tabelaBase); //Apaga a row na table associada ao elemento
+            }catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
             listaElementos.remove(tblTabelaCustom.getSelectedRow());
         }else{
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
@@ -200,6 +227,10 @@ public class TabelaViewer extends javax.swing.JFrame {
         new starter().setVisible(true);
         this.dispose();   
     }//GEN-LAST:event_mnuHomeRetornarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEditarActionPerformed
 
 
 

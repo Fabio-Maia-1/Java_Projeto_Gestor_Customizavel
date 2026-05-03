@@ -4,6 +4,7 @@
  */
 package business.model;
 
+
 import java.util.Objects;
 
 /**
@@ -11,12 +12,12 @@ import java.util.Objects;
  * @author Fábio
  */
 public class Tabela {
-    
-    private Integer numero;
-    private String nomeTabela;
+
+    private int numero;
+    private String nome;
     private String descricao;
     
-    private Integer numColunas;
+    private int numColunas;
     private String coluna1;
     private String coluna2;
     private String coluna3;
@@ -29,7 +30,7 @@ public class Tabela {
     
     public Tabela(Integer numero, String nomeTabela, String descricao, Integer numColunas, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8) {
         this.numero = numero;
-        this.nomeTabela = nomeTabela;
+        this.nome = nomeTabela;
         this.descricao = descricao;
         this.numColunas = numColunas;
         this.coluna1 = coluna1;
@@ -42,12 +43,40 @@ public class Tabela {
         this.coluna8 = coluna8;
     }
     
+    public String retornarConteudoColuna(int i){
+        switch (i) {
+            case 1:
+                return this.nome;
+            case 2:
+                return this.descricao;
+            case 4:
+                return this.coluna1;
+            case 5:
+                return this.coluna2;
+            case 6:
+                return this.coluna3;
+            case 7:
+                return this.coluna4;
+            case 8:
+                return this.coluna5;
+            case 9:
+                return this.coluna6;
+            case 10:
+                return this.coluna7;
+            case 11:
+                return this.coluna8;
+            default:
+                return null;
+        }
+    }
+    
+    
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 37 * hash + Objects.hashCode(this.numero);
-        hash = 37 * hash + Objects.hashCode(this.nomeTabela);
+        hash = 37 * hash + Objects.hashCode(this.nome);
         hash = 37 * hash + Objects.hashCode(this.descricao);
         hash = 37 * hash + Objects.hashCode(this.numColunas);
         hash = 37 * hash + Objects.hashCode(this.coluna1);
@@ -73,7 +102,7 @@ public class Tabela {
             return false;
         }
         final Tabela other = (Tabela) obj;
-        if (!Objects.equals(this.nomeTabela, other.nomeTabela)) {
+        if (!Objects.equals(this.nome, other.nome)) {
             return false;
         }
         if (!Objects.equals(this.descricao, other.descricao)) {
@@ -118,11 +147,11 @@ public class Tabela {
     }
 
     public String getNomeTabela() {
-        return nomeTabela;
+        return nome;
     }
 
     public void setNomeTabela(String nomeTabela) {
-        this.nomeTabela = nomeTabela;
+        this.nome = nomeTabela;
     }
 
     public String getDescricao() {

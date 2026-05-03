@@ -5,6 +5,8 @@
 package presentation.ui.gui;
 
 import business.model.Tabela;
+import business.service.TabelaService;
+import java.sql.Connection;
 
 /**
  *
@@ -17,24 +19,29 @@ public class DlgEditTabela extends javax.swing.JDialog {
     public final static Integer CANCELAR = 0;
     
     private Integer botaoPressionado = CONFIRMAR; //Assume que o utilizador vai confirmar as mudanças
-    private Tabela tabela;
+    private Tabela tabela = null;
+    private TabelaService tabelaService = null;
     
-    private static Integer numColunas = 2; //Nº de colunas inicial
-    private static Integer num = 1; //Numero inicial. Será incrementado com cada utilização
-    private static boolean editar = false; //impede a incremntação do número quando estamos a editar
-    private static Integer numEdicao; //guarda o codigo da tabela que estamos a editar
+    private Integer numColunas = 2; //Nº de colunas inicial
+    private Integer num = 1; //Id. Será atualizado dependendo do nº de tabelas na bases de dados
 
     /**
      * Creates new form DlgEditTabela
      */
     //Construtor para tabelas novas
-    public DlgEditTabela(java.awt.Frame parent, boolean modal) {
+    public DlgEditTabela(java.awt.Frame parent, boolean modal, Connection ligacao) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
         txtNumColunas.setText(numColunas.toString()); //Inciar txtField
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
-        editar = false;
+        
+        try {
+            tabelaService = new TabelaService(ligacao);
+            this.num = tabelaService.getUltimoId() + 1; //Obtem o id mais recente da bd e incrementa       
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     //Construtor para editar tabelas existentes
@@ -43,13 +50,30 @@ public class DlgEditTabela extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         getRootPane().setDefaultButton(btnConfirmar);
+        this.numColunas = tabelaParaEditar.getNumColunas();
+        
+        //Desativar partes que não devem ser ateradas
+        btnMenos.setEnabled(false);
+        btnMais.setEnabled(false);
+        
+        //Configurar dados iniciais da tabela para editar
         if(tabelaParaEditar != null){
+            disponiblizarColunasNecessariasNaEdicao(tabelaParaEditar);
+         
             txtNome.setText(tabelaParaEditar.getNomeTabela());
             txtDescricao.setText(tabelaParaEditar.getDescricao());
-            //Adicionar colunas --------------------------------------------------------------------
+            txtNumColunas.setText(tabelaParaEditar.getNumColunas().toString());
+            txtColuna1.setText(tabelaParaEditar.getColuna1());
+            txtColuna2.setText(tabelaParaEditar.getColuna2());
+            txtColuna3.setText(tabelaParaEditar.getColuna3());
+            txtColuna4.setText(tabelaParaEditar.getColuna4());
+            txtColuna5.setText(tabelaParaEditar.getColuna5());
+            txtColuna6.setText(tabelaParaEditar.getColuna6());
+            txtColuna7.setText(tabelaParaEditar.getColuna7());
+            txtColuna8.setText(tabelaParaEditar.getColuna8());
+
+            this.num = tabelaParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
         }
-        editar = true;
-        numEdicao = tabelaParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
     }
 
     /**
@@ -294,6 +318,49 @@ public class DlgEditTabela extends javax.swing.JDialog {
         return tabela;
     }
     
+    private void disponiblizarColunasNecessariasNaEdicao(Tabela t){
+        switch (numColunas) {
+            case 1:
+                txtColuna2.setEnabled(false); //Desativa o txtField
+                break;
+            case 3:
+                txtColuna3.setEnabled(true); //Ativa o txtField
+                break;
+            case 4:
+                txtColuna3.setEnabled(true);
+                txtColuna4.setEnabled(true);
+                break;
+            case 5:
+                txtColuna3.setEnabled(true);
+                txtColuna4.setEnabled(true);
+                txtColuna5.setEnabled(true);
+                break;
+            case 6:
+                txtColuna3.setEnabled(true);
+                txtColuna4.setEnabled(true);
+                txtColuna5.setEnabled(true);
+                txtColuna6.setEnabled(true);
+                break;
+            case 7:
+                txtColuna3.setEnabled(true);
+                txtColuna4.setEnabled(true);
+                txtColuna5.setEnabled(true);
+                txtColuna6.setEnabled(true);
+                txtColuna7.setEnabled(true);
+                break;
+            case 8:
+                txtColuna3.setEnabled(true);
+                txtColuna4.setEnabled(true);
+                txtColuna5.setEnabled(true);
+                txtColuna6.setEnabled(true);
+                txtColuna7.setEnabled(true);
+                txtColuna8.setEnabled(true);
+                break;
+            default:
+                break;
+        }
+    }
+    
     //Diminui o nº de colunas da nova tabela
     private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
         numColunas -= 1;
@@ -371,20 +438,10 @@ public class DlgEditTabela extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (editar == false){ //Verifica se está a adicionar uma tabela nova ou não
-            //Criação da tabelas com seus dados e colunas. Colunas não usadas serão null
-            tabela = new Tabela(num, txtNome.getText(), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
-            txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-            botaoPressionado = CONFIRMAR;
-            this.num++; //Incrementa o número
-            dispose();
-        }
-        else{
-            tabela = new Tabela(numEdicao, txtNome.getText(), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
-            txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-            botaoPressionado = CONFIRMAR;
-            dispose();
-        }
+        tabela = new Tabela(num, txtNome.getText(), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
+                txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
+        botaoPressionado = CONFIRMAR;
+        dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 

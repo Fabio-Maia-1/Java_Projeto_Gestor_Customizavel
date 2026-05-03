@@ -6,6 +6,8 @@ package presentation.ui.gui;
 
 import business.model.Elemento;
 import business.model.Tabela;
+import business.service.ElementoService;
+import java.sql.Connection;
 
 /**
  *
@@ -18,25 +20,30 @@ public class DlgEditElemento extends javax.swing.JDialog {
     public final static Integer CANCELAR = 0;
     
     private Integer botaoPressionado = CONFIRMAR; //Assume que o utilizador vai confirmar as mudanças
-    private Elemento elemento;
-    private Tabela tabelaBase;
+    private Elemento elemento = null;
+    private Tabela tabelaBase = null;
+    private ElementoService elementoService = null;
     
-    private static Integer num = 1; //Numero inicial. Será incrementado com cada utilização
-    private static boolean editar = false; //impede a incremntação do número quando estamos a editar
-    private static Integer numEdicao; //guarda o codigo do elemento que estamos a editar
+    private Integer num = 1; //Numero inicial. Será incrementado com cada utilização
 
     /**
      * Creates new form DlgEditElemento
      */
     //Construtor para elementos novos
-    public DlgEditElemento(java.awt.Frame parent, boolean modal, Tabela tabela) {
+    public DlgEditElemento(java.awt.Frame parent, boolean modal, Tabela tabela, Connection ligacao) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
         this.tabelaBase = tabela;
         prepararApresentacaoDaJanela(); //Passa os nomes das colunas e controla visibilidade
-        setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
-        editar = false;
+
+        try {
+            elementoService = new ElementoService(ligacao);
+            this.num = elementoService.getUltimoId(tabelaBase) + 1; //Obtem o id mais recente da bd e incrementa       
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     //Construtor para editar elementos existentes
@@ -45,11 +52,10 @@ public class DlgEditElemento extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
-        //if(tabelaParaEditar != null){
+        if(elementoParaEditar != null){
             //Adicionar colunas --------------------------------------------------------------------
-        //}
-        editar = true;
-        numEdicao = elementoParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
+        }
+        this.num = elementoParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
     }
 
     /**
@@ -195,20 +201,11 @@ public class DlgEditElemento extends javax.swing.JDialog {
     }
     
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (editar == false){ //Verifica se está a adicionar uma tabela nova ou não
-            //Criação do elementos. Colunas não usadas serão null
-            elemento = new Elemento(num, txtColuna1.getText(), txtColuna2.getText(), txtColuna3.getText(), txtColuna4.getText(),
-                                    txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-            botaoPressionado = CONFIRMAR;
-            this.num++; //Incrementa o número
-            dispose();
-        }
-        else{
-            elemento = new Elemento(numEdicao, txtColuna1.getText(), txtColuna2.getText(), txtColuna3.getText(), txtColuna4.getText(),
-                                    txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-            botaoPressionado = CONFIRMAR;
-            dispose();
-        }
+        //Criação do elementos. Colunas não usadas serão null
+        elemento = new Elemento(num, txtColuna1.getText(), txtColuna2.getText(), txtColuna3.getText(), txtColuna4.getText(),
+                txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
+        botaoPressionado = CONFIRMAR;
+        dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

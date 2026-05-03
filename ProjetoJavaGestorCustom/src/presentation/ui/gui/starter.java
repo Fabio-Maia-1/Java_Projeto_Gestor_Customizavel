@@ -7,8 +7,13 @@ package presentation.ui.gui;
 import business.model.ArrayListObservable;
 import business.model.Tabela;
 import business.model.TabelaTableModel;
+import business.service.TabelaService;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableColumn;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -17,24 +22,41 @@ import javax.swing.table.TableColumn;
 public class starter extends javax.swing.JFrame {
     
     private ArrayListObservable<Tabela> listaTabelas;
-
+    private Connection ligacao = null;
+    private TabelaService tabelaService = null;
+    
+    //Dados conexão
+    String baseDados = "apdz0125_08_ProjetoJava";
+    String servidor = "62.28.39.135";
+    String user = "apdz0125";
+    String password = "123.Abc";
+    String url = "jdbc:mysql://" + servidor + ":3306/" + baseDados;
+    
     /**
      * Creates new form TabelaViewer
      */
     public starter() {
+        
         initComponents();
-        setLocationRelativeTo(null);//Janela aparece no meio do ecrã
-        
-        listaTabelas = new ArrayListObservable<>();
-        
+        setLocationRelativeTo(null);//Janela aparece no meio do ecrã       
+        conectarBaseDados();
+
+        try { //Atualizar tabela com elementos da base de dados
+            tabelaService = new TabelaService(ligacao);
+            listaTabelas = tabelaService.fillAll(); 
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
         //Codigo para o table model
         TabelaTableModel TableModel = new TabelaTableModel(Tabela.class, listaTabelas);
         tblPrincipal.setModel(TableModel);
-        
+
         //Modifica a largura das colunas. Metodo encontrado na net.
         tblPrincipal.getColumnModel().getColumn(0).setPreferredWidth(58);
         tblPrincipal.getColumnModel().getColumn(1).setPreferredWidth(250);
         tblPrincipal.getColumnModel().getColumn(2).setPreferredWidth(480);
+        
     }
 
     /**
@@ -161,40 +183,105 @@ public class starter extends javax.swing.JFrame {
     
     //Adicionar novo elemento
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        DlgEditTabela editorTabela = new DlgEditTabela(this, true);
+        conectarBaseDados();
+        
+        DlgEditTabela editorTabela = new DlgEditTabela(this, true, ligacao); 
         editorTabela.setVisible(true);
 
         //Só será executado quando o dialog fechar
-        if(editorTabela.getBotaoPressionado() == DlgEditTabela.CONFIRMAR){
+        if (editorTabela.getBotaoPressionado() == DlgEditTabela.CONFIRMAR) {
             Tabela novaTabela = editorTabela.getTabela();
             listaTabelas.add(novaTabela);
+
+            try { //Nova row na table "tabelas"
+                tabelaService.guardar(novaTabela); 
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try { //Nova table na base de dados (para os elementos desta tabela)
+                tabelaService.criarTabelaSQL(novaTabela); 
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
     
     //Apagar elemento
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
-        if(tblPrincipal.getSelectedRow() > -1){
-            listaTabelas.remove(tblPrincipal.getSelectedRow());
+        if(tblPrincipal.getSelectedRow() > -1){ 
+            Tabela tabela = listaTabelas.get(tblPrincipal.getSelectedRow());
+            listaTabelas.remove(tblPrincipal.getSelectedRow()); 
+            
+            try { //Apaga a row na table "tabelas"  
+                tabelaService.apagarRow(tabela); 
+            }catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try { //Apaga a table associada na base de dados
+                tabelaService.apagarTabelaSQL(tabela); 
+            }catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }  
         }else{
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
         }
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        if (tblPrincipal.getSelectedRow() > -1) {
+            int row = tblPrincipal.getSelectedRow();
+
+            Tabela tabelaAEditar = listaTabelas.get(row);
+
+            DlgEditTabela editorTabela = new DlgEditTabela(this, true, tabelaAEditar);
+            editorTabela.setVisible(true);
+
+            //Só será executado quando o dialog terminar
+            if (editorTabela.getBotaoPressionado() == DlgEditTabela.CONFIRMAR) {
+                Tabela tabelaDoEditor = editorTabela.getTabela();
+                listaTabelas.set(row, tabelaDoEditor);
+               
+                try { //Guarda alterações da row na table "tabelas"
+                    tabelaService.atualizarRow(tabelaDoEditor);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+                try { //Atualiza o nome da table associada a esta row na base de dados
+                    tabelaService.atualizarNomeTable(tabelaAEditar, tabelaDoEditor);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+                //Nota: Para além do nome da table, não é preciso alterar mais dados porque o
+                //proximo form escreve o nome das colunas a partir do objeto tabela que recebe
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
         if(tblPrincipal.getSelectedRow() > -1){
             Integer row = tblPrincipal.getSelectedRow(); //Retorna linha selecionada       
             Tabela tabela = listaTabelas.get(row); //Retorna tabela da linha selecionada
-            new TabelaViewer(tabela).setVisible(true); //Abre nova window com base na tabela selecionada
+            new TabelaViewer(tabela, ligacao).setVisible(true); //Abre nova window com base na tabela selecionada
             this.dispose(); 
         }else{
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
         }  
     }//GEN-LAST:event_btnAbrirActionPerformed
 
+     private void conectarBaseDados() {
+        try {
+            //Estabelecer conexão
+            this.ligacao = DriverManager.getConnection(url, user, password);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */
