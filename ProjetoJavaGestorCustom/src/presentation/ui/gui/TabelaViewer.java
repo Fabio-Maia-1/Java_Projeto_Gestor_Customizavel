@@ -9,6 +9,7 @@ import business.model.ElementoTableModel;
 import business.model.Elemento;
 import business.model.Tabela;
 import business.service.ElementoService;
+import share.Funcionalidades;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 
@@ -22,6 +23,7 @@ public class TabelaViewer extends javax.swing.JFrame {
     private Tabela tabelaBase; //Para saber os nomes de cada coluna
     public Connection ligacao = null;
     private ElementoService elementoService = null;
+    private Funcionalidades funcao = null;
 
     /**
      * Creates new form TabelaViewer
@@ -31,6 +33,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         setLocationRelativeTo(null);//Janela aparece no meio do ecrã
         this.ligacao = ligacao;
         this.tabelaBase = tabela; //Para saber os nomes de cada coluna
+        this.funcao = new Funcionalidades();
         
         lblTitulo.setText("    " + tabela.getNomeTabela().toUpperCase()); //Escrever titulo do jFrame
         this.setTitle("    " + tabela.getNomeTabela().toUpperCase());//Escrever nome da tabela na barra superior do JFrame
@@ -67,6 +70,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnApagar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnAdicionar = new javax.swing.JButton();
+        btnRetornar = new javax.swing.JButton();
         mnuBarra = new javax.swing.JMenuBar();
         mnuHome = new javax.swing.JMenu();
         mnuHomeRetornar = new javax.swing.JMenuItem();
@@ -75,6 +79,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         mnuHelp = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(407, 260));
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitulo.setText("jLabel1");
@@ -125,12 +130,16 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnAdicionar.setText("Adicionar");
         btnAdicionar.addActionListener(this::btnAdicionarActionPerformed);
 
+        btnRetornar.setText("Retornar");
+        btnRetornar.addActionListener(this::btnRetornarActionPerformed);
+
         javax.swing.GroupLayout pnlButoesLayout = new javax.swing.GroupLayout(pnlButoes);
         pnlButoes.setLayout(pnlButoesLayout);
         pnlButoesLayout.setHorizontalGroup(
             pnlButoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlButoesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRetornar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnApagar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -143,6 +152,7 @@ public class TabelaViewer extends javax.swing.JFrame {
             .addComponent(btnAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
             .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnApagar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnRetornar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         mnuHome.setText("Home");
@@ -171,10 +181,12 @@ public class TabelaViewer extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlTabela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(pnlButoes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlTabela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addComponent(pnlButoes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,13 +236,37 @@ public class TabelaViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void mnuHomeRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHomeRetornarActionPerformed
-        new starter().setVisible(true);
-        this.dispose();   
+        funcao.retornarPaginaPrincipal(this);
     }//GEN-LAST:event_mnuHomeRetornarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        if (tblTabelaCustom.getSelectedRow() > -1) {
+            int row = tblTabelaCustom.getSelectedRow();
+
+            Elemento elementoAEditar = listaElementos.get(row);
+
+            DlgEditElemento editorElemento = new DlgEditElemento(this, true, tabelaBase, elementoAEditar);
+            editorElemento.setVisible(true);
+
+            //Só será executado quando o dialog terminar
+            if (editorElemento.getBotaoPressionado() == DlgEditElemento.CONFIRMAR) {
+                Elemento elementoDoEditor = editorElemento.getElemento();
+                listaElementos.set(row, elementoDoEditor);
+               
+                try { //Guarda alterações da row na table "tabelas"
+                    elementoService.atualizar(elementoDoEditor, tabelaBase);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetornarActionPerformed
+        funcao.retornarPaginaPrincipal(this);
+    }//GEN-LAST:event_btnRetornarActionPerformed
 
 
 
@@ -238,6 +274,7 @@ public class TabelaViewer extends javax.swing.JFrame {
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnRetornar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JMenuBar mnuBarra;

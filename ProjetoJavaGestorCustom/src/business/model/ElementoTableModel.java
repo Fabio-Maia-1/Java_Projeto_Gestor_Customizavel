@@ -1,7 +1,7 @@
 
 package business.model;
 
-import business.service.Funcionalidades;
+import share.Funcionalidades;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import javax.swing.table.AbstractTableModel;
@@ -85,7 +85,7 @@ public class ElementoTableModel<T> extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return CLASS_TYPE.getDeclaredFields()[columnIndex].getType();
+        return Elemento.class.getDeclaredFields()[columnIndex].getType();
     }
 
     @Override

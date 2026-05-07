@@ -7,6 +7,9 @@ package presentation.ui.gui;
 import business.model.Tabela;
 import business.service.TabelaService;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
+import share.Funcionalidades;
+import share.IntrudocaoCaracteresInvalidosException;
 
 /**
  *
@@ -21,6 +24,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
     private Integer botaoPressionado = CONFIRMAR; //Assume que o utilizador vai confirmar as mudanças
     private Tabela tabela = null;
     private TabelaService tabelaService = null;
+    private Funcionalidades funcao = null;
     
     private Integer numColunas = 2; //Nº de colunas inicial
     private Integer num = 1; //Id. Será atualizado dependendo do nº de tabelas na bases de dados
@@ -33,6 +37,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
+        this.funcao = new Funcionalidades();
         txtNumColunas.setText(numColunas.toString()); //Inciar txtField
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
         
@@ -40,7 +45,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
             tabelaService = new TabelaService(ligacao);
             this.num = tabelaService.getUltimoId() + 1; //Obtem o id mais recente da bd e incrementa       
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }
     
@@ -50,6 +55,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         getRootPane().setDefaultButton(btnConfirmar);
+        this.funcao = new Funcionalidades();
         this.numColunas = tabelaParaEditar.getNumColunas();
         
         //Desativar partes que não devem ser ateradas
@@ -438,10 +444,20 @@ public class DlgEditTabela extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        tabela = new Tabela(num, txtNome.getText(), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
-                txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-        botaoPressionado = CONFIRMAR;
-        dispose();
+        try {
+            funcao.verificarCaracteres(txtNome.getText()); //Verificar que não há chars no nome que possam dar erro na criação de novas tabelas
+ 
+            tabela = new Tabela(num, funcao.corrigirEspacosNosNomes(txtNome.getText()), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
+                    txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
+            botaoPressionado = CONFIRMAR;
+            dispose();
+              
+        } catch (IntrudocaoCaracteresInvalidosException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex);
+        }
+
+      
+     
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 

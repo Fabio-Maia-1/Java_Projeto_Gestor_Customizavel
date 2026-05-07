@@ -5,146 +5,54 @@
 package business.model;
 
 
-import java.util.Objects;
-
 /**
  *
  * @author Fábio
  */
-public class Tabela {
+public class Tabela extends Elemento{
 
-    private int numero;
+    private Integer numero; //necessário para exibir tabela corretamente
     private String nome;
     private String descricao;
-    
+
     private int numColunas;
-    private String coluna1;
-    private String coluna2;
-    private String coluna3;
-    private String coluna4;
-    private String coluna5;
-    private String coluna6;
-    private String coluna7;
-    private String coluna8;
-    
-    
+
     public Tabela(Integer numero, String nomeTabela, String descricao, Integer numColunas, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8) {
+        super(numero, coluna1, coluna2, coluna3, coluna4, coluna5, coluna6, coluna7, coluna8);
         this.numero = numero;
         this.nome = nomeTabela;
         this.descricao = descricao;
         this.numColunas = numColunas;
-        this.coluna1 = coluna1;
-        this.coluna2 = coluna2;
-        this.coluna3 = coluna3;
-        this.coluna4 = coluna4;
-        this.coluna5 = coluna5;
-        this.coluna6 = coluna6;
-        this.coluna7 = coluna7;
-        this.coluna8 = coluna8;
     }
-    
-    public String retornarConteudoColuna(int i){
+
+    @Override
+    public String retornarConteudoColuna(int i) {
         switch (i) {
             case 1:
                 return this.nome;
             case 2:
                 return this.descricao;
             case 4:
-                return this.coluna1;
+                return "Ola";
             case 5:
-                return this.coluna2;
+                return super.getColuna2();
             case 6:
-                return this.coluna3;
+                return super.getColuna3();
             case 7:
-                return this.coluna4;
+                return super.getColuna4();
             case 8:
-                return this.coluna5;
+                return super.getColuna5();
             case 9:
-                return this.coluna6;
+                return super.getColuna6();
             case 10:
-                return this.coluna7;
+                return super.getColuna7();
             case 11:
-                return this.coluna8;
+                return super.getColuna8();
             default:
                 return null;
         }
     }
-    
-    
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.numero);
-        hash = 37 * hash + Objects.hashCode(this.nome);
-        hash = 37 * hash + Objects.hashCode(this.descricao);
-        hash = 37 * hash + Objects.hashCode(this.numColunas);
-        hash = 37 * hash + Objects.hashCode(this.coluna1);
-        hash = 37 * hash + Objects.hashCode(this.coluna2);
-        hash = 37 * hash + Objects.hashCode(this.coluna3);
-        hash = 37 * hash + Objects.hashCode(this.coluna4);
-        hash = 37 * hash + Objects.hashCode(this.coluna5);
-        hash = 37 * hash + Objects.hashCode(this.coluna6);
-        hash = 37 * hash + Objects.hashCode(this.coluna7);
-        hash = 37 * hash + Objects.hashCode(this.coluna8);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Tabela other = (Tabela) obj;
-        if (!Objects.equals(this.nome, other.nome)) {
-            return false;
-        }
-        if (!Objects.equals(this.descricao, other.descricao)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna1, other.coluna1)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna2, other.coluna2)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna3, other.coluna3)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna4, other.coluna4)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna5, other.coluna5)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna6, other.coluna6)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna7, other.coluna7)) {
-            return false;
-        }
-        if (!Objects.equals(this.coluna8, other.coluna8)) {
-            return false;
-        }
-        if (!Objects.equals(this.numero, other.numero)) {
-            return false;
-        }
-        return Objects.equals(this.numColunas, other.numColunas);
-    }
-
-    public Integer getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
 
     public String getNomeTabela() {
         return nome;
@@ -170,69 +78,4 @@ public class Tabela {
         this.numColunas = numColunas;
     }
 
-    public String getColuna1() {
-        return coluna1;
-    }
-
-    public void setColuna1(String coluna1) {
-        this.coluna1 = coluna1;
-    }
-
-    public String getColuna2() {
-        return coluna2;
-    }
-
-    public void setColuna2(String coluna2) {
-        this.coluna2 = coluna2;
-    }
-
-    public String getColuna3() {
-        return coluna3;
-    }
-
-    public void setColuna3(String coluna3) {
-        this.coluna3 = coluna3;
-    }
-
-    public String getColuna4() {
-        return coluna4;
-    }
-
-    public void setColuna4(String coluna4) {
-        this.coluna4 = coluna4;
-    }
-
-    public String getColuna5() {
-        return coluna5;
-    }
-
-    public void setColuna5(String coluna5) {
-        this.coluna5 = coluna5;
-    }
-
-    public String getColuna6() {
-        return coluna6;
-    }
-
-    public void setColuna6(String coluna6) {
-        this.coluna6 = coluna6;
-    }
-
-    public String getColuna7() {
-        return coluna7;
-    }
-
-    public void setColuna7(String coluna7) {
-        this.coluna7 = coluna7;
-    }
-
-    public String getColuna8() {
-        return coluna8;
-    }
-
-    public void setColuna8(String coluna8) {
-        this.coluna8 = coluna8;
-    }
-    
-    
 }

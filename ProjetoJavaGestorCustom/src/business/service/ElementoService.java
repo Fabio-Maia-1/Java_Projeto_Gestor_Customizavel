@@ -26,6 +26,10 @@ public class ElementoService {
         return elementoDAO.guardar(e, t);
     }
     
+    public Boolean atualizar(Elemento e, Tabela t) throws Exception{
+        return elementoDAO.update(e, t);
+    }
+    
     public ArrayListObservable fillAll(Tabela t) throws Exception{
         return elementoDAO.findAll(t);
     }

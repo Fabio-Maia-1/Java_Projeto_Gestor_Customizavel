@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
+import share.Funcionalidades;
 
 /**
  *
@@ -24,6 +25,7 @@ public class starter extends javax.swing.JFrame {
     private ArrayListObservable<Tabela> listaTabelas;
     private Connection ligacao = null;
     private TabelaService tabelaService = null;
+    private Funcionalidades funcao = null;
     
     //Dados conexão
     String baseDados = "apdz0125_08_ProjetoJava";
@@ -40,12 +42,13 @@ public class starter extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);//Janela aparece no meio do ecrã       
         conectarBaseDados();
+        this.funcao = new Funcionalidades();
 
         try { //Atualizar tabela com elementos da base de dados
             tabelaService = new TabelaService(ligacao);
             listaTabelas = tabelaService.fillAll(); 
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
 
         //Codigo para o table model
@@ -53,10 +56,20 @@ public class starter extends javax.swing.JFrame {
         tblPrincipal.setModel(TableModel);
 
         //Modifica a largura das colunas. Metodo encontrado na net.
-        tblPrincipal.getColumnModel().getColumn(0).setPreferredWidth(58);
+        tblPrincipal.getColumnModel().getColumn(0).setPreferredWidth(55);
         tblPrincipal.getColumnModel().getColumn(1).setPreferredWidth(250);
-        tblPrincipal.getColumnModel().getColumn(2).setPreferredWidth(480);
+        tblPrincipal.getColumnModel().getColumn(2).setPreferredWidth(483);
         
+        //Permite interação com o rato
+        tblPrincipal.addMouseListener(new MouseAdapter() { 
+            @Override
+            public void mouseClicked(MouseEvent e) { //Instruções
+                //Duplo clique abre uma sub-tabela
+                if (e.getClickCount() == 2 && tblPrincipal.getSelectedRow() > -1) {
+                    abrir();
+                }
+            }
+        });   
     }
 
     /**
@@ -84,6 +97,7 @@ public class starter extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CUSTOM MANAGER");
+        setMinimumSize(new java.awt.Dimension(407, 260));
 
         tblPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -193,15 +207,11 @@ public class starter extends javax.swing.JFrame {
             Tabela novaTabela = editorTabela.getTabela();
             listaTabelas.add(novaTabela);
 
-            try { //Nova row na table "tabelas"
+            try { //Nova row na table "tabelas" + Nova table na base de dados (para os elementos desta tabela)
                 tabelaService.guardar(novaTabela); 
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-            try { //Nova table na base de dados (para os elementos desta tabela)
                 tabelaService.criarTabelaSQL(novaTabela); 
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
@@ -212,15 +222,11 @@ public class starter extends javax.swing.JFrame {
             Tabela tabela = listaTabelas.get(tblPrincipal.getSelectedRow());
             listaTabelas.remove(tblPrincipal.getSelectedRow()); 
             
-            try { //Apaga a row na table "tabelas"  
+            try { //Apaga a row na table "tabelas" + Apaga a table associada na base de dados
                 tabelaService.apagarRow(tabela); 
-            }catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-            try { //Apaga a table associada na base de dados
                 tabelaService.apagarTabelaSQL(tabela); 
             }catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                 JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }  
         }else{
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
@@ -241,15 +247,11 @@ public class starter extends javax.swing.JFrame {
                 Tabela tabelaDoEditor = editorTabela.getTabela();
                 listaTabelas.set(row, tabelaDoEditor);
                
-                try { //Guarda alterações da row na table "tabelas"
+                try { //Guarda alterações da row na table "tabelas" + Atualiza o nome da table associada a esta row na base de dados
                     tabelaService.atualizarRow(tabelaDoEditor);
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
-                }
-                try { //Atualiza o nome da table associada a esta row na base de dados
                     tabelaService.atualizarNomeTable(tabelaAEditar, tabelaDoEditor);
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                 }
                 //Nota: Para além do nome da table, não é preciso alterar mais dados porque o
                 //proximo form escreve o nome das colunas a partir do objeto tabela que recebe
@@ -259,15 +261,19 @@ public class starter extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEditarActionPerformed
 
-    private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        if(tblPrincipal.getSelectedRow() > -1){
+    private void abrir() {
+        if (tblPrincipal.getSelectedRow() > -1) {
             Integer row = tblPrincipal.getSelectedRow(); //Retorna linha selecionada       
             Tabela tabela = listaTabelas.get(row); //Retorna tabela da linha selecionada
             new TabelaViewer(tabela, ligacao).setVisible(true); //Abre nova window com base na tabela selecionada
-            this.dispose(); 
-        }else{
+            this.dispose();
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
-        }  
+        }
+    }
+    
+    private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        abrir();
     }//GEN-LAST:event_btnAbrirActionPerformed
 
      private void conectarBaseDados() {
@@ -275,7 +281,7 @@ public class starter extends javax.swing.JFrame {
             //Estabelecer conexão
             this.ligacao = DriverManager.getConnection(url, user, password);
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }
     

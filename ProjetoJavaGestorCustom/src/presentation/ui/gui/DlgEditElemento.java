@@ -47,13 +47,24 @@ public class DlgEditElemento extends javax.swing.JDialog {
     }
     
     //Construtor para editar elementos existentes
-    public DlgEditElemento(java.awt.Frame parent, boolean modal, Elemento elementoParaEditar) {
+    public DlgEditElemento(java.awt.Frame parent, boolean modal, Tabela tabela, Elemento elementoParaEditar) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null); //Faz com que a janela apareça no meio do ecrã
+        this.tabelaBase = tabela;
+        prepararApresentacaoDaJanela(); //Passa os nomes das colunas e controla visibilidade
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
+        
+        //Configurar dados iniciais da tabela para editar
         if(elementoParaEditar != null){
-            //Adicionar colunas --------------------------------------------------------------------
+            txtColuna1.setText(elementoParaEditar.getColuna1());
+            txtColuna2.setText(elementoParaEditar.getColuna2());
+            txtColuna3.setText(elementoParaEditar.getColuna3());
+            txtColuna4.setText(elementoParaEditar.getColuna4());
+            txtColuna5.setText(elementoParaEditar.getColuna5());
+            txtColuna6.setText(elementoParaEditar.getColuna6());
+            txtColuna7.setText(elementoParaEditar.getColuna7());
+            txtColuna8.setText(elementoParaEditar.getColuna8());
         }
         this.num = elementoParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
     }

@@ -8,7 +8,6 @@ import business.model.ArrayListObservable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import business.model.Tabela;
 import java.sql.Statement;
 
@@ -23,7 +22,7 @@ public class TabelaDAO {
     private ArrayListObservable<Tabela> lista;
 
     
-    public TabelaDAO(Connection connection) throws SQLException {
+    public TabelaDAO(Connection connection) throws Exception {
         this.ligacao = connection;
     }
     

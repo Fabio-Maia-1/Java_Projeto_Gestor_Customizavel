@@ -62,8 +62,19 @@ public class TabelaTableModel<T> extends AbstractTableModel {
     }
 
     @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        return Tabela.class.getDeclaredFields()[columnIndex].getType();
+    public Class<?> getColumnClass(int column) {
+        //return Tabela.class.getDeclaredFields()[columnIndex].getType();
+        switch (column) {
+            case 0:
+                return Elemento.class.getDeclaredFields()[0].getType();
+            case 1:
+                return Tabela.class.getDeclaredFields()[1].getType();
+            case 2:
+                return Elemento.class.getDeclaredFields()[2].getType();
+            default:
+                return Tabela.class.getDeclaredFields()[column].getType();
+                
+        }
     }
     
 

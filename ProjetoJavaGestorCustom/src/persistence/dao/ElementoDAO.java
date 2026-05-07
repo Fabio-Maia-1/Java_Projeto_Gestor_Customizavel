@@ -8,7 +8,6 @@ import business.model.ArrayListObservable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import business.model.Tabela;
 import business.model.Elemento;
 import java.sql.Statement;
@@ -49,6 +48,25 @@ public class ElementoDAO {
             return resultado > 0;
         }
         return false;
+    }
+    
+    public Boolean update(Elemento e, Tabela t) throws Exception {
+        int id = e.getNumero();
+        String sql = "";
+        String coluna = "";
+        String nomeTable = t.getNomeTabela();
+  
+        for (int i = 1; i <= 8; i++) {
+            coluna = Elemento.class.getDeclaredFields()[i].getName();//nome da coluna
+            sql = "UPDATE " + nomeTable
+                    + " SET " + coluna + " = ? "
+                    + "WHERE id = " + id;
+
+            pst = ligacao.prepareStatement(sql);
+            pst.setString(1, e.retornarConteudoColuna(i));
+            pst.executeUpdate();
+        }
+        return true;
     }
     
     //Listar elementos da table na base de dados
