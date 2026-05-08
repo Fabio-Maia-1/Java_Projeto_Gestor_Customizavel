@@ -249,7 +249,8 @@ public class TabelaViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void mnuHomeRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHomeRetornarActionPerformed
-        funcao.retornarPaginaPrincipal(this);
+        new starter().setVisible(true);
+        this.dispose();  
     }//GEN-LAST:event_mnuHomeRetornarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -282,9 +283,9 @@ public class TabelaViewer extends javax.swing.JFrame {
     }
     
     private void btnRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetornarActionPerformed
-        funcao.retornarPaginaPrincipal(this);
+        new starter().setVisible(true);
+        this.dispose();  
     }//GEN-LAST:event_btnRetornarActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

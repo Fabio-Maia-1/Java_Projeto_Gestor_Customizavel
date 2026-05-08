@@ -13,10 +13,11 @@ import presentation.ui.gui.starter;
  *
  * @author Fábio
  */
-public class Funcionalidades {
+public class Funcionalidades { //pesquisar pop-up menu
     
     //Funcionalidades para tratamento ou prevenção de excessões -------------------------
     
+    //Impede a tentativa de criação de uma table com caracteres inválidos no seu nome.
     public void verificarCaracteres(String texto) throws IntrudocaoCaracteresInvalidosException {
         //Falta as ' '. Verificar se o \\ funciona
         char[] listaDeCaracteresInvalidos = {'<','>','"','(',')','!','?',',','.',':',';','#','$','&','*','+','-','/','\\','=','@','%'};   
@@ -56,16 +57,7 @@ public class Funcionalidades {
         return nomeCorrigido;
     }
     
+    //Metodos especificos a uma determinada classe devem estar nessa classe
+    //Funcionalidades Extra ---------------------------------------------------------------
     
-    //Funcionalidades partilhadas --------------------------------------
-    
-    
-    //Funcionalidades do starter ---------------------------------------
-    
-    
-    //Funcionalidades do TabelaViewer ----------------------------------
-    public void retornarPaginaPrincipal(TabelaViewer paginaAtual){
-        new starter().setVisible(true);
-        paginaAtual.dispose();  
-    }    
 }
