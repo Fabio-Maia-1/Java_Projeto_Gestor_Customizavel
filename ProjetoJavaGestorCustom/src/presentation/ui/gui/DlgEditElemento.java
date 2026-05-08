@@ -8,6 +8,7 @@ import business.model.Elemento;
 import business.model.Tabela;
 import business.service.ElementoService;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -42,7 +43,7 @@ public class DlgEditElemento extends javax.swing.JDialog {
             elementoService = new ElementoService(ligacao);
             this.num = elementoService.getUltimoId(tabelaBase) + 1; //Obtem o id mais recente da bd e incrementa       
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }
     
@@ -97,7 +98,7 @@ public class DlgEditElemento extends javax.swing.JDialog {
         lblColuna8 = new javax.swing.JLabel();
         txtColuna8 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
         btnConfirmar.setText("Confirmar");

@@ -9,6 +9,8 @@ import business.model.ElementoTableModel;
 import business.model.Elemento;
 import business.model.Tabela;
 import business.service.ElementoService;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import share.Funcionalidades;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
@@ -42,7 +44,7 @@ public class TabelaViewer extends javax.swing.JFrame {
             elementoService = new ElementoService(ligacao);
             listaElementos = elementoService.fillAll(tabelaBase); 
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
         
         tblTabelaCustom.getColumnModel().getColumn(0).setPreferredWidth(58); //Largura da 1ª coluna
@@ -50,6 +52,17 @@ public class TabelaViewer extends javax.swing.JFrame {
         //Codigo para o table model
         ElementoTableModel TableModel = new ElementoTableModel(Tabela.class, listaElementos, tabela);
         tblTabelaCustom.setModel(TableModel);   
+        
+        //Permite interação com o rato
+        tblTabelaCustom.addMouseListener(new MouseAdapter() { 
+            @Override
+            public void mouseClicked(MouseEvent e) { //Instruções
+                //Duplo clique abre uma sub-tabela
+                if (e.getClickCount() == 2 && tblTabelaCustom.getSelectedRow() > -1) {
+                    editarElemento();
+                }
+            }
+        });   
     }
 
     /**
@@ -215,7 +228,7 @@ public class TabelaViewer extends javax.swing.JFrame {
                 elementoService = new ElementoService(ligacao);
                 elementoService.guardar(novoElemento, tabelaBase); //Nova row na table associada ao elemento
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
@@ -227,7 +240,7 @@ public class TabelaViewer extends javax.swing.JFrame {
                 Elemento elemento = listaElementos.get(tblTabelaCustom.getSelectedRow());
                 elementoService.apagarRow(elemento, tabelaBase); //Apaga a row na table associada ao elemento
             }catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
             listaElementos.remove(tblTabelaCustom.getSelectedRow());
         }else{
@@ -240,7 +253,11 @@ public class TabelaViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuHomeRetornarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        if (tblTabelaCustom.getSelectedRow() > -1) {
+       editarElemento();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void editarElemento(){
+         if (tblTabelaCustom.getSelectedRow() > -1) {
             int row = tblTabelaCustom.getSelectedRow();
 
             Elemento elementoAEditar = listaElementos.get(row);
@@ -256,14 +273,14 @@ public class TabelaViewer extends javax.swing.JFrame {
                 try { //Guarda alterações da row na table "tabelas"
                     elementoService.atualizar(elementoDoEditor, tabelaBase);
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                 }
             }
         } else {
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
         }
-    }//GEN-LAST:event_btnEditarActionPerformed
-
+    }
+    
     private void btnRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetornarActionPerformed
         funcao.retornarPaginaPrincipal(this);
     }//GEN-LAST:event_btnRetornarActionPerformed

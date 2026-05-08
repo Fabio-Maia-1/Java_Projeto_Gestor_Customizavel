@@ -10,6 +10,7 @@ import java.sql.Connection;
 import javax.swing.JOptionPane;
 import share.Funcionalidades;
 import share.IntrudocaoCaracteresInvalidosException;
+import share.NomeDaTabelaEstaVazioExeption;
 
 /**
  *
@@ -40,7 +41,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
         this.funcao = new Funcionalidades();
         txtNumColunas.setText(numColunas.toString()); //Inciar txtField
         getRootPane().setDefaultButton(btnConfirmar); //Faz com que enter ative o botão Confirmar
-        
+           
         try {
             tabelaService = new TabelaService(ligacao);
             this.num = tabelaService.getUltimoId() + 1; //Obtem o id mais recente da bd e incrementa       
@@ -119,7 +120,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
         lblNomeColuna8 = new javax.swing.JLabel();
         txtColuna8 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Configurar Tabela");
         setResizable(false);
 
@@ -439,25 +440,33 @@ public class DlgEditTabela extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMaisActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        botaoPressionado = CANCELAR;
-        dispose();
+        fecharDlg();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void fecharDlg(){
+        botaoPressionado = CANCELAR;
+        dispose();
+    }
+    
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        try {
-            funcao.verificarCaracteres(txtNome.getText()); //Verificar que não há chars no nome que possam dar erro na criação de novas tabelas
- 
-            tabela = new Tabela(num, funcao.corrigirEspacosNosNomes(txtNome.getText()), txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
-                    txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-            botaoPressionado = CONFIRMAR;
-            dispose();
-              
+        try {//Verificar que não há chars no nome que possam dar erro na criação de novas tabelas   
+            funcao.verificarCaracteres(txtNome.getText());      
+            
+            try {//Verificar que o nome não está vazio e corrigir espaços
+                String nome = funcao.corrigirEspacosNosNomes(txtNome.getText());
+                
+                tabela = new Tabela(num, nome, txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
+                        txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
+                botaoPressionado = CONFIRMAR;
+                dispose();
+                
+            }catch(NomeDaTabelaEstaVazioExeption ex){
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+            
         } catch (IntrudocaoCaracteresInvalidosException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
-        }
-
-      
-     
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        } 
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 

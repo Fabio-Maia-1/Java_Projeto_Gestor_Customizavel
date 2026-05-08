@@ -5,6 +5,7 @@
 package share;
 
 import java.util.ArrayList;
+import presentation.ui.gui.DlgEditTabela;
 import presentation.ui.gui.TabelaViewer;
 import presentation.ui.gui.starter;
 
@@ -38,10 +39,10 @@ public class Funcionalidades {
     }
     
     
-    public String corrigirEspacosNosNomes(String nome){
+    public String corrigirEspacosNosNomes(String nome) throws NomeDaTabelaEstaVazioExeption{
         String nomeCorrigido = "";
         
-        for (char letra : nomeCorrigido.toCharArray()) {
+        for (char letra : nome.toCharArray()) {
             if( letra == ' '){
                 nomeCorrigido += '_';
             }
@@ -49,11 +50,14 @@ public class Funcionalidades {
                 nomeCorrigido += letra;
             }
         }
+        if (nome == null || nome.isBlank()){
+            throw new NomeDaTabelaEstaVazioExeption("Não pode deixar o nome da tabela vazio");
+        }
         return nomeCorrigido;
     }
     
     
-    //Funcionalidades partilhadas pelos forms --------------------------
+    //Funcionalidades partilhadas --------------------------------------
     
     
     //Funcionalidades do starter ---------------------------------------
