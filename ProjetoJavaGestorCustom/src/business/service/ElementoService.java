@@ -34,6 +34,14 @@ public class ElementoService {
         return elementoDAO.findAll(t);
     }
     
+        public ArrayListObservable fillAllFavoritos(Tabela t) throws Exception{
+        return elementoDAO.findAllFavoritos(t);
+    }
+    
+    public Boolean meterOuTirarFavorito(Elemento e, Tabela t) throws Exception{
+        return elementoDAO.meterOuTirarFavorito(e, t);
+    }
+    
     public int getUltimoId(Tabela t) throws Exception{
         return elementoDAO.obterIdMaisRecente(t);
     }

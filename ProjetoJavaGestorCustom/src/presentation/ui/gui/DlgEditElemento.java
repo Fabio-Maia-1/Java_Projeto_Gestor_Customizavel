@@ -25,7 +25,8 @@ public class DlgEditElemento extends javax.swing.JDialog {
     private Tabela tabelaBase = null;
     private ElementoService elementoService = null;
     
-    private Integer num = 1; //Numero inicial. Será incrementado com cada utilização
+    private Integer num = 1; //Numero inicial que é substituido pelo maior id da table se existir. Será incrementado com cada utilização
+    private Boolean fav = false; //Se estiver a editar um favorito, passa a ser true
 
     /**
      * Creates new form DlgEditElemento
@@ -68,6 +69,7 @@ public class DlgEditElemento extends javax.swing.JDialog {
             txtColuna8.setText(elementoParaEditar.getColuna8());
         }
         this.num = elementoParaEditar.getNumero();//guarda o codigo da pessoa que estamos a editar
+        this.fav = elementoParaEditar.getFavorito();
     }
 
     /**
@@ -215,7 +217,7 @@ public class DlgEditElemento extends javax.swing.JDialog {
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         //Criação do elementos. Colunas não usadas serão null
         elemento = new Elemento(num, txtColuna1.getText(), txtColuna2.getText(), txtColuna3.getText(), txtColuna4.getText(),
-                txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
+                txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText(), this.fav);
         botaoPressionado = CONFIRMAR;
         dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed

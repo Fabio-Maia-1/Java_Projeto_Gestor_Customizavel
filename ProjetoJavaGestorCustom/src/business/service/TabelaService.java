@@ -4,7 +4,6 @@
  */
 package business.service;
 
-import java.sql.SQLException;
 import persistence.dao.TabelaDAO;
 import business.model.Tabela;
 import java.sql.Connection;
@@ -28,6 +27,14 @@ public class TabelaService {
     
     public ArrayListObservable fillAll() throws Exception{
         return tabelaDAO.findAll();
+    }
+    
+    public ArrayListObservable fillAllFavoritos() throws Exception{
+        return tabelaDAO.findAllFavoritos();
+    }
+    
+    public Boolean meterOuTirarFavorito(Tabela t) throws Exception{
+        return tabelaDAO.meterOuTirarFavorito(t);
     }
     
     public int getUltimoId() throws Exception{

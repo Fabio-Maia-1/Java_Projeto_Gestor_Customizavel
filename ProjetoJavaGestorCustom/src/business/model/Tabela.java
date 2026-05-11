@@ -11,14 +11,14 @@ package business.model;
  */
 public class Tabela extends Elemento{
 
-    private Integer numero; //necessário para exibir tabela corretamente
+    private Integer numero; //necessário para exibir tabela corretamente com o table model
     private String nome;
     private String descricao;
 
     private int numColunas;
 
-    public Tabela(Integer numero, String nomeTabela, String descricao, Integer numColunas, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8) {
-        super(numero, coluna1, coluna2, coluna3, coluna4, coluna5, coluna6, coluna7, coluna8);
+    public Tabela(Integer numero, String nomeTabela, String descricao, Integer numColunas, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8, Boolean favorito) {
+        super(numero, coluna1, coluna2, coluna3, coluna4, coluna5, coluna6, coluna7, coluna8, favorito);
         this.numero = numero;
         this.nome = nomeTabela;
         this.descricao = descricao;
@@ -33,7 +33,7 @@ public class Tabela extends Elemento{
             case 2:
                 return this.descricao;
             case 4:
-                return "Ola";
+                return super.getColuna1();
             case 5:
                 return super.getColuna2();
             case 6:

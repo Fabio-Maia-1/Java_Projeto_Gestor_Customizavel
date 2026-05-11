@@ -26,6 +26,7 @@ public class TabelaViewer extends javax.swing.JFrame {
     public Connection ligacao = null;
     private ElementoService elementoService = null;
     private Funcionalidades funcao = null;
+    private boolean mostrarTodos = true; //Quando a tabela recarrega, sabe se deve mostrar todos ou só os favoritos
 
     /**
      * Creates new form TabelaViewer
@@ -40,18 +41,8 @@ public class TabelaViewer extends javax.swing.JFrame {
         lblTitulo.setText("    " + tabela.getNomeTabela().toUpperCase()); //Escrever titulo do jFrame
         this.setTitle("    " + tabela.getNomeTabela().toUpperCase());//Escrever nome da tabela na barra superior do JFrame
         
-        try { //Atualizar tabela com elementos da base de dados
-            elementoService = new ElementoService(ligacao);
-            listaElementos = elementoService.fillAll(tabelaBase); 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        }
-        
-        tblTabelaCustom.getColumnModel().getColumn(0).setPreferredWidth(58); //Largura da 1ª coluna
-        
-        //Codigo para o table model
-        ElementoTableModel TableModel = new ElementoTableModel(Tabela.class, listaElementos, tabela);
-        tblTabelaCustom.setModel(TableModel);   
+        //Atualizar tabela com elementos da base de dados
+        preencherTabelaComTodos();
         
         //Permite interação com o rato
         tblTabelaCustom.addMouseListener(new MouseAdapter() { 
@@ -60,6 +51,21 @@ public class TabelaViewer extends javax.swing.JFrame {
                 //Duplo clique abre uma sub-tabela
                 if (e.getClickCount() == 2 && tblTabelaCustom.getSelectedRow() > -1) {
                     editarElemento();
+                }
+            }
+            @Override //Right-click abre menu popup. Codigo encontrado na net
+            public void mouseReleased(MouseEvent e) {
+                //Selecionar row com right-click
+                int row = tblTabelaCustom.rowAtPoint(e.getPoint());
+                tblTabelaCustom.setRowSelectionInterval(row, row);
+                //Abrir pop-up
+                if (e.isPopupTrigger() && tblTabelaCustom.getSelectedRow() > -1) {
+                    //Mostrar apenas opção relevante
+                    if (listaElementos.get(tblTabelaCustom.getSelectedRow()).getFavorito() == false){
+                        mnuPopUpAdicionar.show(e.getComponent(), e.getX(), e.getY());
+                    }else{
+                        mnuPopUpRemover.show(e.getComponent(), e.getX(), e.getY());
+                    }                   
                 }
             }
         });   
@@ -74,6 +80,11 @@ public class TabelaViewer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mnuPopUpAdicionar = new javax.swing.JPopupMenu();
+        mnuAdicionarAosFavoritos = new javax.swing.JMenuItem();
+        mnuPopUpRemover = new javax.swing.JPopupMenu();
+        mnuRemoverDosFavoritos = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         pnlTitulo = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         pnlTabela = new javax.swing.JPanel();
@@ -84,24 +95,42 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnAdicionar = new javax.swing.JButton();
         btnRetornar = new javax.swing.JButton();
+        btnFavoritos = new javax.swing.JButton();
+        btnTodos = new javax.swing.JButton();
         mnuBarra = new javax.swing.JMenuBar();
         mnuHome = new javax.swing.JMenu();
         mnuHomeRetornar = new javax.swing.JMenuItem();
+        mnuEncerrarAplicacao = new javax.swing.JMenuItem();
         mnuManage = new javax.swing.JMenu();
-        mnuPreferences = new javax.swing.JMenu();
+        mnuAdicionarElemento = new javax.swing.JMenuItem();
+        mnuEditarElemento = new javax.swing.JMenuItem();
+        mnuApagarElemento = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
+        mnuInstrucoes = new javax.swing.JMenuItem();
+
+        mnuAdicionarAosFavoritos.setText("Adicionar aos Favoritos");
+        mnuAdicionarAosFavoritos.addActionListener(this::mnuAdicionarAosFavoritosActionPerformed);
+        mnuPopUpAdicionar.add(mnuAdicionarAosFavoritos);
+
+        mnuRemoverDosFavoritos.setText("Remover dos Favoritos");
+        mnuRemoverDosFavoritos.addActionListener(this::mnuRemoverDosFavoritosActionPerformed);
+        mnuPopUpRemover.add(mnuRemoverDosFavoritos);
+
+        jMenuItem7.setText("jMenuItem7");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(407, 260));
 
-        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblTitulo.setText("jLabel1");
 
         javax.swing.GroupLayout pnlTituloLayout = new javax.swing.GroupLayout(pnlTitulo);
         pnlTitulo.setLayout(pnlTituloLayout);
         pnlTituloLayout.setHorizontalGroup(
             pnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(pnlTituloLayout.createSequentialGroup()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlTituloLayout.setVerticalGroup(
             pnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +160,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         );
         pnlTabelaLayout.setVerticalGroup(
             pnlTabelaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
         );
 
         btnApagar.setText("Apagar");
@@ -168,21 +197,52 @@ public class TabelaViewer extends javax.swing.JFrame {
             .addComponent(btnRetornar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        btnFavoritos.setText("Favoritos");
+        btnFavoritos.addActionListener(this::btnFavoritosActionPerformed);
+
+        btnTodos.setText("Todos");
+        btnTodos.addActionListener(this::btnTodosActionPerformed);
+
         mnuHome.setText("Home");
 
+        mnuHomeRetornar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0));
         mnuHomeRetornar.setText("Retornar");
         mnuHomeRetornar.addActionListener(this::mnuHomeRetornarActionPerformed);
         mnuHome.add(mnuHomeRetornar);
 
+        mnuEncerrarAplicacao.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
+        mnuEncerrarAplicacao.setText("Encerrar Aplicação");
+        mnuEncerrarAplicacao.addActionListener(this::mnuEncerrarAplicacaoActionPerformed);
+        mnuHome.add(mnuEncerrarAplicacao);
+
         mnuBarra.add(mnuHome);
 
         mnuManage.setText("Manage");
+
+        mnuAdicionarElemento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, 0));
+        mnuAdicionarElemento.setText("Criar Novo Elemento");
+        mnuAdicionarElemento.addActionListener(this::mnuAdicionarElementoActionPerformed);
+        mnuManage.add(mnuAdicionarElemento);
+
+        mnuEditarElemento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, 0));
+        mnuEditarElemento.setText("Editar Elemento");
+        mnuEditarElemento.addActionListener(this::mnuEditarElementoActionPerformed);
+        mnuManage.add(mnuEditarElemento);
+
+        mnuApagarElemento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, 0));
+        mnuApagarElemento.setText("Apagar Elemento");
+        mnuApagarElemento.addActionListener(this::mnuApagarElementoActionPerformed);
+        mnuManage.add(mnuApagarElemento);
+
         mnuBarra.add(mnuManage);
 
-        mnuPreferences.setText("Preferences");
-        mnuBarra.add(mnuPreferences);
-
         mnuHelp.setText("Help");
+
+        mnuInstrucoes.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, 0));
+        mnuInstrucoes.setText("Instruções de Utilização");
+        mnuInstrucoes.addActionListener(this::mnuInstrucoesActionPerformed);
+        mnuHelp.add(mnuInstrucoes);
+
         mnuBarra.add(mnuHelp);
 
         setJMenuBar(mnuBarra);
@@ -197,14 +257,24 @@ public class TabelaViewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pnlTabela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pnlTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnTodos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnFavoritos)
+                                .addGap(8, 8, 8)))
                         .addContainerGap())
                     .addComponent(pnlButoes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnFavoritos)
+                        .addComponent(btnTodos)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlTabela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -216,6 +286,75 @@ public class TabelaViewer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+        adicionarElemento();
+    }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        apagarElemento();
+    }//GEN-LAST:event_btnApagarActionPerformed
+
+    private void mnuHomeRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHomeRetornarActionPerformed
+        new starter().setVisible(true);
+        this.dispose();  
+    }//GEN-LAST:event_mnuHomeRetornarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+       editarElemento();
+    }//GEN-LAST:event_btnEditarActionPerformed
+ 
+    private void btnRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetornarActionPerformed
+        new starter().setVisible(true);
+        this.dispose();  
+    }//GEN-LAST:event_btnRetornarActionPerformed
+
+    private void btnTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTodosActionPerformed
+        mostrarTodos = true;
+        recarregarTabela();
+    }//GEN-LAST:event_btnTodosActionPerformed
+
+    private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
+        mostrarTodos = false;
+        recarregarTabela();
+    }//GEN-LAST:event_btnFavoritosActionPerformed
+
+    private void mnuAdicionarAosFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAdicionarAosFavoritosActionPerformed
+        adicionarOuRemoverDosFavoritos();
+        recarregarTabela();
+        tblTabelaCustom.clearSelection();
+    }//GEN-LAST:event_mnuAdicionarAosFavoritosActionPerformed
+
+    private void mnuRemoverDosFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRemoverDosFavoritosActionPerformed
+        adicionarOuRemoverDosFavoritos();
+        recarregarTabela();
+        tblTabelaCustom.clearSelection();
+    }//GEN-LAST:event_mnuRemoverDosFavoritosActionPerformed
+
+    private void mnuEncerrarAplicacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEncerrarAplicacaoActionPerformed
+        dispose();
+    }//GEN-LAST:event_mnuEncerrarAplicacaoActionPerformed
+
+    private void mnuAdicionarElementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAdicionarElementoActionPerformed
+        adicionarElemento();
+    }//GEN-LAST:event_mnuAdicionarElementoActionPerformed
+
+    private void mnuEditarElementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEditarElementoActionPerformed
+        editarElemento();
+    }//GEN-LAST:event_mnuEditarElementoActionPerformed
+
+    private void mnuApagarElementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuApagarElementoActionPerformed
+        apagarElemento();
+    }//GEN-LAST:event_mnuApagarElementoActionPerformed
+
+    private void mnuInstrucoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuInstrucoesActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        ////
+        ///
+        ///
+        ///////
+    }//GEN-LAST:event_mnuInstrucoesActionPerformed
+
+    private void adicionarElemento(){
         DlgEditElemento editorElemento = new DlgEditElemento(this, true, tabelaBase, ligacao);
         editorElemento.setVisible(true);
 
@@ -231,9 +370,9 @@ public class TabelaViewer extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
         }
-    }//GEN-LAST:event_btnAdicionarActionPerformed
-
-    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+    }
+    
+    private void apagarElemento(){
         if(tblTabelaCustom.getSelectedRow() > -1){
             try { //Apagar da table de acordo com o index da row selecionada
                 elementoService = new ElementoService(ligacao);
@@ -246,17 +385,8 @@ public class TabelaViewer extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
         }
-    }//GEN-LAST:event_btnApagarActionPerformed
-
-    private void mnuHomeRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHomeRetornarActionPerformed
-        new starter().setVisible(true);
-        this.dispose();  
-    }//GEN-LAST:event_mnuHomeRetornarActionPerformed
-
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-       editarElemento();
-    }//GEN-LAST:event_btnEditarActionPerformed
-
+    }
+    
     private void editarElemento(){
          if (tblTabelaCustom.getSelectedRow() > -1) {
             int row = tblTabelaCustom.getSelectedRow();
@@ -282,25 +412,86 @@ public class TabelaViewer extends javax.swing.JFrame {
         }
     }
     
-    private void btnRetornarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetornarActionPerformed
-        new starter().setVisible(true);
-        this.dispose();  
-    }//GEN-LAST:event_btnRetornarActionPerformed
+    private void recarregarTabela(){
+        if (this.mostrarTodos == true){
+            preencherTabelaComTodos();
+        } else{
+            preencherTabelaComFavoritos();
+        }
+    }
+    
+    //Atualizar tabela com elementos da base de dados
+    private void preencherTabelaComTodos(){
+        try { 
+            elementoService = new ElementoService(ligacao);
+            listaElementos = elementoService.fillAll(tabelaBase); 
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        //Codigo para o table model
+        ElementoTableModel TableModel = new ElementoTableModel(Tabela.class, listaElementos, tabelaBase);
+        tblTabelaCustom.setModel(TableModel); 
+        
+        tblTabelaCustom.getColumnModel().getColumn(0).setMaxWidth(58); //Largura da 1ª coluna
+    }
+    
+    private void preencherTabelaComFavoritos(){
+        try { 
+            elementoService = new ElementoService(ligacao);
+            listaElementos = elementoService.fillAllFavoritos(tabelaBase); 
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        //Codigo para o table model
+        ElementoTableModel TableModel = new ElementoTableModel(Tabela.class, listaElementos, tabelaBase);
+        tblTabelaCustom.setModel(TableModel); 
+        
+        tblTabelaCustom.getColumnModel().getColumn(0).setMaxWidth(58); //Largura da 1ª coluna
+    }
+    
+    public void adicionarOuRemoverDosFavoritos(){
+        if (tblTabelaCustom.getSelectedRow() > -1) {
+            Integer row = tblTabelaCustom.getSelectedRow(); //Retorna linha selecionada       
+            Elemento elemento = listaElementos.get(row); //Retorna elemento da linha selecionada
 
+            try { //Marca como favorito ou remove dos favoritos
+                elementoService = new ElementoService(ligacao);
+                elementoService.meterOuTirarFavorito(elemento, tabelaBase);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }           
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
+        }
+    }
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnFavoritos;
     private javax.swing.JButton btnRetornar;
+    private javax.swing.JButton btnTodos;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JMenuItem mnuAdicionarAosFavoritos;
+    private javax.swing.JMenuItem mnuAdicionarElemento;
+    private javax.swing.JMenuItem mnuApagarElemento;
     private javax.swing.JMenuBar mnuBarra;
+    private javax.swing.JMenuItem mnuEditarElemento;
+    private javax.swing.JMenuItem mnuEncerrarAplicacao;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenu mnuHome;
     private javax.swing.JMenuItem mnuHomeRetornar;
+    private javax.swing.JMenuItem mnuInstrucoes;
     private javax.swing.JMenu mnuManage;
-    private javax.swing.JMenu mnuPreferences;
+    private javax.swing.JPopupMenu mnuPopUpAdicionar;
+    private javax.swing.JPopupMenu mnuPopUpRemover;
+    private javax.swing.JMenuItem mnuRemoverDosFavoritos;
     private javax.swing.JPanel pnlButoes;
     private javax.swing.JPanel pnlTabela;
     private javax.swing.JPanel pnlTitulo;

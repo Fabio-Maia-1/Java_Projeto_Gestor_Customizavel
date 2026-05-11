@@ -30,7 +30,7 @@ public class TabelaDAO {
     public Boolean guardar(Tabela t) throws Exception {
         if (t != null) {
             String stringSQL = "INSERT INTO tabelas(id, nome, descricao, numColunas, coluna1, coluna2, "
-                    + "coluna3, coluna4, coluna5, coluna6, coluna7, coluna8) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "coluna3, coluna4, coluna5, coluna6, coluna7, coluna8, favorito) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             pst = ligacao.prepareStatement(stringSQL);
             pst.setInt(1, t.getNumero());
             pst.setString(2, t.getNomeTabela());
@@ -44,6 +44,7 @@ public class TabelaDAO {
             pst.setString(10, t.getColuna6());
             pst.setString(11, t.getColuna7());
             pst.setString(12, t.getColuna8());
+            pst.setBoolean(13, t.getFavorito());
 
             int resultado = pst.executeUpdate();
 
@@ -100,11 +101,54 @@ public class TabelaDAO {
             while (rs.next()) {
                 t = new Tabela(rs.getInt("id"), rs.getString("nome"), rs.getString("descricao"), rs.getInt("numColunas"),
                 rs.getString("coluna1"), rs.getString("coluna2"), rs.getString("coluna3"), rs.getString("coluna4"),
-                rs.getString("coluna5"), rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"));
+                rs.getString("coluna5"), rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"),
+                rs.getBoolean("favorito"));
                 lista.add(t);
             }
         }
         return lista;
+    }
+    
+    //Igual ao findAll(), mas para a table "tabelasFavoritas"
+    public ArrayListObservable findAllFavoritos() throws Exception {
+        lista = new ArrayListObservable<>();
+        Tabela t = null;
+        String sql = "SELECT * FROM tabelas "
+                + "WHERE favorito = 1";
+
+        try (Statement stmt = ligacao.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                t = new Tabela(rs.getInt("id"), rs.getString("nome"), rs.getString("descricao"), rs.getInt("numColunas"),
+                rs.getString("coluna1"), rs.getString("coluna2"), rs.getString("coluna3"), rs.getString("coluna4"),
+                rs.getString("coluna5"), rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"),
+                rs.getBoolean("favorito"));
+                lista.add(t);
+            }
+        }
+        return lista;
+    }
+    
+    public Boolean meterOuTirarFavorito(Tabela t) throws Exception {
+        int id = t.getNumero();
+        Boolean fav = t.getFavorito();
+        String sql = "";
+
+        if (fav == false) {
+            sql = "UPDATE tabelas "
+                    + "SET favorito = 1 "
+                    + "WHERE id = " + id;
+        } else {
+            sql = "UPDATE tabelas "
+                    + "SET favorito = 0 "
+                    + "WHERE id = " + id;
+        }
+
+        try (PreparedStatement stmt = ligacao.prepareStatement(sql)) {
+            stmt.executeUpdate();
+            return true;
+        }
     }
     
     public int obterIdMaisRecente() throws Exception {
@@ -141,7 +185,7 @@ public class TabelaDAO {
             String nome = t.getNomeTabela();
             String stringSQL = "create table " + nome + "(id int primary key, coluna1 varchar(100), " +
             "coluna2 varchar(100), coluna3 varchar(100), coluna4 varchar(100), coluna5 varchar(100), " +
-            "coluna6 varchar(100), coluna7 varchar(100), coluna8 varchar(100))";
+            "coluna6 varchar(100), coluna7 varchar(100), coluna8 varchar(100), favorito bool)";
  
             pst = ligacao.prepareStatement(stringSQL);
             int resultado = pst.executeUpdate();

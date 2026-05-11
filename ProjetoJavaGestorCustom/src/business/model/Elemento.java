@@ -21,9 +21,11 @@ public class Elemento {
     private String coluna6;
     private String coluna7;
     private String coluna8;
+    
+    private boolean favorito = false;
 
     
-    public Elemento(Integer numero, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8) {
+    public Elemento(Integer numero, String coluna1, String coluna2, String coluna3, String coluna4, String coluna5, String coluna6, String coluna7, String coluna8, Boolean favorito) {
         this.numero = numero;
         this.coluna1 = coluna1;
         this.coluna2 = coluna2;
@@ -33,6 +35,7 @@ public class Elemento {
         this.coluna6 = coluna6;
         this.coluna7 = coluna7;
         this.coluna8 = coluna8;
+        this.favorito = favorito;
     }
     
     public String retornarConteudoColuna(int i){
@@ -131,5 +134,12 @@ public class Elemento {
         this.coluna8 = coluna8;
     }
     
+    public Boolean getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Boolean favorito) {
+        this.favorito = favorito;
+    }
     
 }

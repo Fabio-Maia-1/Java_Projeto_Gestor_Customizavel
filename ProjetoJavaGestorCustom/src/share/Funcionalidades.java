@@ -5,9 +5,6 @@
 package share;
 
 import java.util.ArrayList;
-import presentation.ui.gui.DlgEditTabela;
-import presentation.ui.gui.TabelaViewer;
-import presentation.ui.gui.starter;
 
 /**
  *
@@ -19,12 +16,11 @@ public class Funcionalidades { //pesquisar pop-up menu
     
     //Impede a tentativa de criação de uma table com caracteres inválidos no seu nome.
     public void verificarCaracteres(String texto) throws IntrudocaoCaracteresInvalidosException {
-        //Falta as ' '. Verificar se o \\ funciona
-        char[] listaDeCaracteresInvalidos = {'<','>','"','(',')','!','?',',','.',':',';','#','$','&','*','+','-','/','\\','=','@','%'};   
+        char[] listaDeCaracteresInvalidos = {'<','>','"','(',')','!','?',',','.',':',';','#','$','&','*','+','-','/','\\','=','@','%','\''};   
         String caracteres = "";
         ArrayList caracteresInvalidosNaPalavra = new ArrayList<>();
         boolean haInvalidos = false;
-        
+
         for (char x : texto.toCharArray()){
             for (char y : listaDeCaracteresInvalidos){
                 if (x == y && !caracteresInvalidosNaPalavra.contains(y)){
@@ -37,6 +33,15 @@ public class Funcionalidades { //pesquisar pop-up menu
         if (haInvalidos){
             throw new IntrudocaoCaracteresInvalidosException("Introduziu caracteres inválidos: (" + caracteres + ")");
         }
+    }
+    
+    public void verificarSeNomeComecaComNumero(String texto) throws NomeComecaComNumeroExeption{
+        char[] listaDeNumeros = {'0','1','2','3','4','5','6','7','8','9'};
+        for (char numero : listaDeNumeros){
+             if (texto.charAt(0) == numero){
+                 throw new NomeComecaComNumeroExeption("O nome de uma tabela não deve começar com um número");
+             }
+        }       
     }
     
     

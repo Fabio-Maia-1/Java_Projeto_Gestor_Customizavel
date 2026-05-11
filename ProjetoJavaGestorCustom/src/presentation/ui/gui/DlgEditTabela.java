@@ -10,6 +10,7 @@ import java.sql.Connection;
 import javax.swing.JOptionPane;
 import share.Funcionalidades;
 import share.IntrudocaoCaracteresInvalidosException;
+import share.NomeComecaComNumeroExeption;
 import share.NomeDaTabelaEstaVazioExeption;
 
 /**
@@ -29,6 +30,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
     
     private Integer numColunas = 2; //Nº de colunas inicial
     private Integer num = 1; //Id. Será atualizado dependendo do nº de tabelas na bases de dados
+    private Boolean fav = false; //Se estiver a editar um favorito, passa a ser true
 
     /**
      * Creates new form DlgEditTabela
@@ -58,6 +60,7 @@ public class DlgEditTabela extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnConfirmar);
         this.funcao = new Funcionalidades();
         this.numColunas = tabelaParaEditar.getNumColunas();
+        this.fav = tabelaParaEditar.getFavorito();
         
         //Desativar partes que não devem ser ateradas
         btnMenos.setEnabled(false);
@@ -449,24 +452,30 @@ public class DlgEditTabela extends javax.swing.JDialog {
     }
     
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        try {//Verificar que não há chars no nome que possam dar erro na criação de novas tabelas   
-            funcao.verificarCaracteres(txtNome.getText());      
-            
-            try {//Verificar que o nome não está vazio e corrigir espaços
-                String nome = funcao.corrigirEspacosNosNomes(txtNome.getText());
-                
-                tabela = new Tabela(num, nome, txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
-                        txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(), txtColuna7.getText(), txtColuna8.getText());
-                botaoPressionado = CONFIRMAR;
-                dispose();
-                
-            }catch(NomeDaTabelaEstaVazioExeption ex){
+        try {//Verificar se o nome da tabela começa com um número
+            funcao.verificarSeNomeComecaComNumero(txtNome.getText());
+
+            try {//Verificar que não há chars no nome que possam dar erro na criação de novas tabelas   
+                funcao.verificarCaracteres(txtNome.getText());
+
+                try {//Verificar que o nome não está vazio e corrigir espaços
+                    String nome = funcao.corrigirEspacosNosNomes(txtNome.getText());
+
+                    tabela = new Tabela(num, nome, txtDescricao.getText(), numColunas, txtColuna1.getText(), txtColuna2.getText(),
+                            txtColuna3.getText(), txtColuna4.getText(), txtColuna5.getText(), txtColuna6.getText(),
+                            txtColuna7.getText(), txtColuna8.getText(), this.fav);
+                    botaoPressionado = CONFIRMAR;
+                    dispose();
+
+                } catch (NomeDaTabelaEstaVazioExeption ex) {
+                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                }
+            } catch (IntrudocaoCaracteresInvalidosException ex) {
                 JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
-            
-        } catch (IntrudocaoCaracteresInvalidosException ex) {
+        } catch (NomeComecaComNumeroExeption ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        } 
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 

@@ -31,7 +31,7 @@ public class ElementoDAO {
         if (e != null) {
             String nome = t.getNomeTabela(); 
             String stringSQL = "INSERT INTO " + nome + "(id, coluna1, coluna2, coluna3, coluna4, "
-                    + "coluna5, coluna6, coluna7, coluna8) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "coluna5, coluna6, coluna7, coluna8, favorito) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             pst = ligacao.prepareStatement(stringSQL);
             pst.setInt(1, e.getNumero());
             pst.setString(2, e.getColuna1());
@@ -42,6 +42,7 @@ public class ElementoDAO {
             pst.setString(7, e.getColuna6());
             pst.setString(8, e.getColuna7());
             pst.setString(9, e.getColuna8());
+            pst.setBoolean(10, e.getFavorito());
 
             int resultado = pst.executeUpdate();
 
@@ -82,11 +83,56 @@ public class ElementoDAO {
             while (rs.next()) {
                 e = new Elemento(rs.getInt("id"), rs.getString("coluna1"), rs.getString("coluna2"),
                         rs.getString("coluna3"), rs.getString("coluna4"), rs.getString("coluna5"),
-                        rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"));
+                        rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"),
+                        rs.getBoolean("favorito"));
                 lista.add(e);
             }
         }
         return lista;
+    }
+    
+    //Igual ao findAll(), mas para a table "tabelasFavoritas"
+    public ArrayListObservable findAllFavoritos(Tabela t) throws Exception {
+        lista = new ArrayListObservable<>();
+        String nome = t.getNomeTabela();
+        Elemento e = null;
+        String sql = "SELECT * FROM " + nome
+                + " WHERE favorito = 1";
+
+        try (Statement stmt = ligacao.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                e = new Elemento(rs.getInt("id"), rs.getString("coluna1"), rs.getString("coluna2"),
+                        rs.getString("coluna3"), rs.getString("coluna4"), rs.getString("coluna5"),
+                        rs.getString("coluna6"), rs.getString("coluna7"), rs.getString("coluna8"),
+                        rs.getBoolean("favorito"));
+                lista.add(e);
+            }
+        }
+        return lista;
+    }
+    
+    public Boolean meterOuTirarFavorito(Elemento e, Tabela t) throws Exception {
+        int id = e.getNumero();
+        String nome = t.getNomeTabela();
+        Boolean fav = e.getFavorito();
+        String sql = "";
+
+        if (fav == false) {
+            sql = "UPDATE " + nome
+                    + " SET favorito = 1 "
+                    + "WHERE id = " + id;
+        } else {
+            sql = "UPDATE " + nome
+                    + " SET favorito = 0 "
+                    + "WHERE id = " + id;
+        }
+
+        try (PreparedStatement stmt = ligacao.prepareStatement(sql)) {
+            stmt.executeUpdate();
+            return true;
+        }
     }
     
      public int obterIdMaisRecente(Tabela t) throws Exception {
