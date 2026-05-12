@@ -44,6 +44,7 @@ public class starter extends javax.swing.JFrame {
         setLocationRelativeTo(null);//Janela aparece no meio do ecrã       
         conectarBaseDados();
         this.funcao = new Funcionalidades();
+        btnTodos.setEnabled(false);
 
         //Atualizar tabela com elementos da base de dados e caracteristicas do table model
         preencherTabelaComTodos();      
@@ -308,12 +309,16 @@ public class starter extends javax.swing.JFrame {
     //Atualizar tabela com apenas os elementos favoritos da base de dados
     private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
         mostrarTodos = false;
+        btnTodos.setEnabled(true);
+        btnFavoritos.setEnabled(false);
         recarregarTabela();
     }//GEN-LAST:event_btnFavoritosActionPerformed
 
     //Atualizar tabela com elementos da base de dados
     private void btnTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTodosActionPerformed
         mostrarTodos = true;
+        btnTodos.setEnabled(false);
+        btnFavoritos.setEnabled(true);
         recarregarTabela();
     }//GEN-LAST:event_btnTodosActionPerformed
 

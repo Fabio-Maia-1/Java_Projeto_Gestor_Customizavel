@@ -98,7 +98,7 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnFavoritos = new javax.swing.JButton();
         btnTodos = new javax.swing.JButton();
         mnuBarra = new javax.swing.JMenuBar();
-        mnuHome = new javax.swing.JMenu();
+        mnuMain = new javax.swing.JMenu();
         mnuHomeRetornar = new javax.swing.JMenuItem();
         mnuEncerrarAplicacao = new javax.swing.JMenuItem();
         mnuManage = new javax.swing.JMenu();
@@ -203,19 +203,19 @@ public class TabelaViewer extends javax.swing.JFrame {
         btnTodos.setText("Todos");
         btnTodos.addActionListener(this::btnTodosActionPerformed);
 
-        mnuHome.setText("Home");
+        mnuMain.setText("Main");
 
         mnuHomeRetornar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0));
         mnuHomeRetornar.setText("Retornar");
         mnuHomeRetornar.addActionListener(this::mnuHomeRetornarActionPerformed);
-        mnuHome.add(mnuHomeRetornar);
+        mnuMain.add(mnuHomeRetornar);
 
         mnuEncerrarAplicacao.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         mnuEncerrarAplicacao.setText("Encerrar Aplicação");
         mnuEncerrarAplicacao.addActionListener(this::mnuEncerrarAplicacaoActionPerformed);
-        mnuHome.add(mnuEncerrarAplicacao);
+        mnuMain.add(mnuEncerrarAplicacao);
 
-        mnuBarra.add(mnuHome);
+        mnuBarra.add(mnuMain);
 
         mnuManage.setText("Manage");
 
@@ -485,9 +485,9 @@ public class TabelaViewer extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuEditarElemento;
     private javax.swing.JMenuItem mnuEncerrarAplicacao;
     private javax.swing.JMenu mnuHelp;
-    private javax.swing.JMenu mnuHome;
     private javax.swing.JMenuItem mnuHomeRetornar;
     private javax.swing.JMenuItem mnuInstrucoes;
+    private javax.swing.JMenu mnuMain;
     private javax.swing.JMenu mnuManage;
     private javax.swing.JPopupMenu mnuPopUpAdicionar;
     private javax.swing.JPopupMenu mnuPopUpRemover;

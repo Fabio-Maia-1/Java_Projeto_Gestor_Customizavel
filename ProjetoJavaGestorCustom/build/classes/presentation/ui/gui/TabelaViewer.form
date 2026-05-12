@@ -41,9 +41,9 @@
     </Component>
     <Menu class="javax.swing.JMenuBar" name="mnuBarra">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="mnuHome">
+        <Menu class="javax.swing.JMenu" name="mnuMain">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Home"/>
+            <Property name="text" type="java.lang.String" value="Main"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuHomeRetornar">
