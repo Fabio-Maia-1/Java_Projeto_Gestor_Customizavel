@@ -56,4 +56,5 @@ Na barra menu, para além da opção "Encerrar Aplicação", o menu "Main" tamb�
 - Adicionar (Tecla N): Abre um painel que permite adicionar elementos novos à tabela do utilizador, respeitando o número de colunas definido na criação da tabela. Depois de preencher as colunas desejadas, o utilizador deve pressionar o botão "Confirmar" para guardar o novo elemento ou o botão "Cancelar" para o descartar.
 - Editar (Tecla E): Abre um painel funcionalmente idêntico ao painel de adição de elementos na tabela, permitindo editar qualquer característica do elemento selecionado.
 - Apagar (Tecla D): Remove o elemento selecionada da tabela.
+
 As funcionalidades de gestão de favoritos continuam a estar presentes nesta página, funcionando da mesma forma. Ou seja, os elementos podem ser marcados como favoritos e desmarcados com o botão direito do rato e os elementos favoritos podem ser filtrados a partir dos botões "Todos" e "Favoritos" no canto superior esquerdo da página.
