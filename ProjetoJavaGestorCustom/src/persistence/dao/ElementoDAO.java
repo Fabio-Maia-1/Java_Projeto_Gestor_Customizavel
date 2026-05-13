@@ -27,6 +27,14 @@ public class ElementoDAO {
         this.ligacao = connection;
     }
 
+    /**
+     * Usa um query SQL para adicionar o objeto Elemento que recebe à base de dados na table que partilhe o nome
+     * do objeto Tabela que recebe.
+     * @param e
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public Boolean guardar(Elemento e, Tabela t) throws Exception {
         if (e != null) {
             String nome = t.getNomeTabela(); 
@@ -51,6 +59,14 @@ public class ElementoDAO {
         return false;
     }
     
+    /**
+     * Usa um query SQL para atualizar o membro Elemento da table que partilha o nome do objeto Tabela recebido
+     * com base no novo objeto Elemento que recebe. Cada coluna é atualizada individualmente
+     * @param e
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public Boolean update(Elemento e, Tabela t) throws Exception {
         int id = e.getNumero();
         String sql = "";
@@ -70,7 +86,13 @@ public class ElementoDAO {
         return true;
     }
     
-    //Listar elementos da table na base de dados
+    /**
+     * Cria uma nova lista ArrayListObservable. Usa os dados da table com o nome do objeto Tabela recebido para
+     * criar um novo objeto Elemento e inserir esse objeto na lista. Retorna a lista preenchida.
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public ArrayListObservable findAll(Tabela t) throws Exception {
         lista = new ArrayListObservable<>();
         String nome = t.getNomeTabela();
@@ -91,7 +113,14 @@ public class ElementoDAO {
         return lista;
     }
     
-    //Igual ao findAll(), mas para a table "tabelasFavoritas"
+    /**
+     * Cria uma nova lista ArrayListObservable. Caso a coluna "favorito" esteja preenchida com "1", usa os dados da
+     * table com o nome do objeto Tabela recebido para criar um novo objeto Elemento e insere esse objeto na lista.
+     * Retorna a lista preenchida.
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public ArrayListObservable findAllFavoritos(Tabela t) throws Exception {
         lista = new ArrayListObservable<>();
         String nome = t.getNomeTabela();
@@ -113,6 +142,15 @@ public class ElementoDAO {
         return lista;
     }
     
+    /**
+     * Recebe um objeto Elemento. Se a propriedade "favorito" for false, usa um query SQL para o marcar como favorito na
+     * table da base de dados que partilha o nome do objeto Tabela recebido. Se a propriedade "favorito" for true, usa
+     * um query SQL para o desmarcar como favorito.
+     * @param e
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public Boolean meterOuTirarFavorito(Elemento e, Tabela t) throws Exception {
         int id = e.getNumero();
         String nome = t.getNomeTabela();
@@ -135,7 +173,14 @@ public class ElementoDAO {
         }
     }
     
-     public int obterIdMaisRecente(Tabela t) throws Exception {
+    /**
+     * Percorre a table com o mesmo nome que o objeto Tabela recebido e guarda o ultimo id que recebe.
+     * Retorna esse id.
+     * @param t
+     * @return
+     * @throws Exception 
+     */
+    public int obterIdMaisRecente(Tabela t) throws Exception {
         String nome = t.getNomeTabela();
         int ultimoId = 0;
         String sql = "SELECT * FROM " + nome;
@@ -150,6 +195,13 @@ public class ElementoDAO {
         return ultimoId;
     }
     
+    /**
+     * Remove o objeto Elememento da table com o mesmo nome que o objeto Tabela com um query SQL.
+     * @param e
+     * @param t
+     * @return
+     * @throws Exception 
+     */
     public Boolean deleteRowById(Elemento e, Tabela t) throws Exception {
         if (e != null) {
             String nome = t.getNomeTabela();

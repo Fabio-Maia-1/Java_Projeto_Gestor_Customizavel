@@ -31,11 +31,14 @@ public class DlgEditTabela extends javax.swing.JDialog {
     private Integer numColunas = 2; //Nº de colunas inicial
     private Integer num = 1; //Id. Será atualizado dependendo do nº de tabelas na bases de dados
     private Boolean fav = false; //Se estiver a editar um favorito, passa a ser true
+    
 
     /**
-     * Creates new form DlgEditTabela
+     * Creates new form DlgEditTabela. Contrutor usado para tabelas novas
+     * @param parent
+     * @param modal
+     * @param ligacao
      */
-    //Construtor para tabelas novas
     public DlgEditTabela(java.awt.Frame parent, boolean modal, Connection ligacao) {
         super(parent, modal);
         initComponents();
@@ -52,7 +55,13 @@ public class DlgEditTabela extends javax.swing.JDialog {
         }
     }
     
-    //Construtor para editar tabelas existentes
+    /**
+     * Construtor para editar tabelas existentes. Usa a informação da tabela para preencher os TextFields.
+     * O número de colunas da tabela não pode ser alterado.
+     * @param parent
+     * @param modal
+     * @param tabelaParaEditar
+     */
     public DlgEditTabela(java.awt.Frame parent, boolean modal, Tabela tabelaParaEditar) {
         super(parent, modal);
         initComponents();
@@ -318,16 +327,33 @@ public class DlgEditTabela extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //Confirma se o utilizador quer confirmar ou cancelar 
+    //
+
+    /**
+     * Retorna o constante CONFIRMAR se a criação/edição da tabela for confirmada ou o constante CANCELAR
+     * se o utilizador cancelar a operação
+     * @return
+     */
     public int getBotaoPressionado(){
         return botaoPressionado;
     }
     
-    //Retorna o novo objeto tabela
+    //
+
+    /**
+     * Retorna o novo objeto Tabela criado quando o utilizador confirmou a operação. No caso da operação ser cancelada
+     * retorna null
+     * @return
+     */
     public Tabela getTabela(){
         return tabela;
     }
     
+    /**
+     * Para ser usado na edição de uma tabela. Verifica o número de colunas da tabela que recebe e ativa ou os TextFields
+     * do Dialog de acordo com esse número
+     * @param t 
+     */
     private void disponiblizarColunasNecessariasNaEdicao(Tabela t){
         switch (numColunas) {
             case 1:
@@ -371,7 +397,11 @@ public class DlgEditTabela extends javax.swing.JDialog {
         }
     }
     
-    //Diminui o nº de colunas da nova tabela
+    /**
+     * Diminui o número de colunas da tabela que está a ser criada até um valor mínimo de 1. Desativa o TextField
+     * associado à coluna que deixou de ser usada
+     * @param evt 
+     */
     private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
         numColunas -= 1;
         txtNumColunas.setText(numColunas.toString()); //Atualiza o nº de colunas no textField
@@ -410,7 +440,11 @@ public class DlgEditTabela extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnMenosActionPerformed
 
-    //Aumenta o nº de colunas da nova tabela
+    /**
+     * Aumenta o número de colunas da tabela que está a ser criada até um valor máximo de 8. Ativa o TextField
+     * associado à nova coluna máxima
+     * @param evt 
+     */
     private void btnMaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaisActionPerformed
         numColunas += 1;
         txtNumColunas.setText(numColunas.toString()); //Atualiza txtField
@@ -443,14 +477,17 @@ public class DlgEditTabela extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMaisActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        fecharDlg();
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void fecharDlg(){
         botaoPressionado = CANCELAR;
         dispose();
-    }
-    
+    }//GEN-LAST:event_btnCancelarActionPerformed
+  
+    /**
+     * Confirma a criação de um novo objeto Tabela de acordo com os dados introduzidos em cada TextField.
+     * Existe um tratamento de exceções para impedir que o nome da tabela inclua determinados caracters,
+     * para impedir que o nome esteja vazio, para impedir que o primeiro caracter do nome seja um número
+     * e para evitar a presença de espaços no nome da tabela.
+     * @param evt 
+     */
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         try {//Verificar se o nome da tabela começa com um número
             funcao.verificarSeNomeComecaComNumero(txtNome.getText());

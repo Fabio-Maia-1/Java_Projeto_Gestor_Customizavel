@@ -182,10 +182,10 @@ public class starter extends javax.swing.JFrame {
             .addComponent(btnApagar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        btnTodos.setText("Todos");
+        btnTodos.setText("Ver Todos");
         btnTodos.addActionListener(this::btnTodosActionPerformed);
 
-        btnFavoritos.setText("Favoritos");
+        btnFavoritos.setText("Ver Favoritos");
         btnFavoritos.addActionListener(this::btnFavoritosActionPerformed);
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -288,12 +288,10 @@ public class starter extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    //Adicionar novo elemento
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         adicionarTabela();
     }//GEN-LAST:event_btnAdicionarActionPerformed
         
-    //Apagar elemento
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         apagarTabela();
     }//GEN-LAST:event_btnApagarActionPerformed
@@ -355,13 +353,12 @@ public class starter extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuApagarTabelaActionPerformed
 
     private void mnuIntrucoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuIntrucoesActionPerformed
-        // TODO add your handling code here:
-        ////
-        ///
-        ///
-        ///////
+        JOptionPane.showMessageDialog(rootPane, mostarIntucoesGestaoTabelas());
     }//GEN-LAST:event_mnuIntrucoesActionPerformed
 
+    /**
+     * Abre um novo form "TabelaViewer" com base nos dados da tabela selecionada. Fecha o form atual.
+     */
     private void abrir() {
         if (tblPrincipal.getSelectedRow() > -1) {
             Integer row = tblPrincipal.getSelectedRow(); //Retorna linha selecionada       
@@ -373,6 +370,11 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Abre um JDialog para que o utilizador introduza dados e usa-os para criar um novo objeto da classe Tabela.
+     * Insere essa tabela numa lista ArrayListObservable e na base de dados. Também cria uma nome table na base de
+     * dados com o nome da nova tabela para armazenar futuros elementos.
+     */
     private void adicionarTabela(){
         conectarBaseDados();
         
@@ -393,6 +395,10 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Abre um JDialog novo com a informação do tabela selecionada. Guarda as mudanças na base de dados e na lista de elementos.
+     * Se for necessário, também altera o nome da table na base de dados associada a esta tabela
+     */
     private void editarTabela(){
         if (tblPrincipal.getSelectedRow() > -1) {
             int row = tblPrincipal.getSelectedRow();
@@ -421,6 +427,10 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Remove a tabela selecionada da lista de tabelas e da base de dados. Também faz drop da table com
+     * o mesmo nome na base de dados.
+     */
     private void apagarTabela(){
         if (tblPrincipal.getSelectedRow() > -1) {
             
@@ -442,6 +452,10 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Envia a tabela selecionada e para o DAO, a onde a propriedade "favorito" da tabela é marcada como true ou false
+     * com base no seu valor atual.
+     */
     public void adicionarOuRemoverDosFavoritos(){
         if (tblPrincipal.getSelectedRow() > -1) {
             Integer row = tblPrincipal.getSelectedRow(); //Retorna linha selecionada       
@@ -459,7 +473,10 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
-    //Atualizar tabela com elementos da base de dados
+    /**
+     * Verifica as tabelas guardadas na table "tabelas" na base de dados e passa-as todas para uma lista ArrayListObservable.
+     * Controi o TableModel com base nessa lista e modifica a largura das colunas visiveis.
+     */
     private void preencherTabelaComTodos(){
         try { 
             tabelaService = new TabelaService(ligacao);
@@ -476,6 +493,11 @@ public class starter extends javax.swing.JFrame {
         tblPrincipal.getColumnModel().getColumn(2).setPreferredWidth(523);
     }
     
+    /**
+     * Verifica a coluna "favorito" de cada tabela guardada na table "tabelas" na base de dados e coloca aquelas com o valor "1" numa
+     * lista ArrayListObservable. Controi o TableModel com base nessa lisra para que apenas as favoritas sejam visiveis e modifica a
+     * largura das colunas visiveis da tabela.
+     */
     private void preencherTabelaComFavoritos(){
         try { 
             tabelaService = new TabelaService(ligacao);
@@ -500,7 +522,10 @@ public class starter extends javax.swing.JFrame {
         }
     }
     
-     private void conectarBaseDados() {
+    /**
+     * Usa propriedades desta classe com dados de conexão para estabelecer uma conexão à base de dados
+     */
+    private void conectarBaseDados() {
         try {
             //Estabelecer conexão
             this.ligacao = DriverManager.getConnection(url, user, password);
@@ -508,7 +533,12 @@ public class starter extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }
-     
+    
+    /**
+     * Abre um pequeno dialog para que o utilizador confirme a sua intenção antes de executar operações perigosas.
+     * Codigo encontrado na net
+     * @return 
+     */
     private Integer confirmarOperacao(){
         //Operação encontrada na net
         return JOptionPane.showConfirmDialog(
@@ -517,6 +547,30 @@ public class starter extends javax.swing.JFrame {
                 "Confirmar",
                 JOptionPane.YES_NO_OPTION
         );
+    }
+        
+    /**
+     * Devolve um texto formatado com instruções para as funcionalidades deste form.
+     * @return
+     */
+    public String mostarIntucoesGestaoTabelas(){
+        String texto = "Obrigado por abrir o painel de instuções.\n\n"
+                + "Na barra superior, também pode encontrar os menus 'Main' e 'Manage', que permitem controlar o estado da\n"
+                + "aplicação ou executar operações de gestão de tabelas, respetivamente.\n\n"
+                + "Descrição das funcionalidades: -----------------------------------------------------------------     \n\n"
+                + "Adicionar (Botão ou Tecla N) - Abre um painel para criar tabelas. Pode definir entre 1 e 8 colunas distintas\n"
+                + "para a sua tabela com os botões '+' e '-'. Quando estiver satisfeito, pode usar o botão 'Confirmar' para\n"
+                + "guardar a nova tabela ou o botão 'Cancelar' para a descartar.\n\n"
+                + "Editar (Botão ou Tecla E) - Abre um painel para edição de tabelas existentes. A única característica que\n"
+                + "não pode ser editada é o número de colunas.\n\n"
+                + "Apagar (Botão ou Tecla D) - Descarta a tabela selecionada.\n\n"
+                + "Abrir (Botão, Tecla A ou duplo-clique numa tabela) - Abre a tabela selecionada, permitindo a visualização e\n"
+                + "gestão dos elementos dessa tabela. A estrutura depende daquilo que introduziu quando a criou.\n\n"
+                + "Adicionar aos Favoritos (Botão direito do rato numa tabela) - Adiciona a tabela à lista de favoritos.\n\n"
+                + "Remover dos Favoritos (Botão direito do rato numa tabela) - Remove a tabela da lista de favoritos.\n\n"
+                + "Ver Favoritos (Botão) - Filtra a lista de tabelas para montrar apenas as que estão marcadas como favoritoas.\n\n"
+                + "Ver Todos (Botão) - Revela todas as tabelas que já foram criadas.";    
+        return texto;
     }
     
     

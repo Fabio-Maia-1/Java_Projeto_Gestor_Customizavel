@@ -29,9 +29,13 @@ public class DlgEditElemento extends javax.swing.JDialog {
     private Boolean fav = false; //Se estiver a editar um favorito, passa a ser true
 
     /**
-     * Creates new form DlgEditElemento
+     * Creates new form DlgEditElemento. Construtor para elementos novos. Recebe a tabela a onde o elemento deve
+     * ser colucado para controlar o número de TextFields que devem ser disponibilizados
+     * @param parent
+     * @param modal
+     * @param ligacao
+     * @param tabela
      */
-    //Construtor para elementos novos
     public DlgEditElemento(java.awt.Frame parent, boolean modal, Tabela tabela, Connection ligacao) {
         super(parent, modal);
         initComponents();
@@ -48,7 +52,16 @@ public class DlgEditElemento extends javax.swing.JDialog {
         }
     }
     
-    //Construtor para editar elementos existentes
+
+    /**
+     * Construtor para editar elementos existentes. Recebe a tabela a onde o elemento deve ser colucado para
+     * controlar o número de TextFields que devem ser disponibilizados e usa os dados do elemento que recebe
+     * para os preencher.
+     * @param parent
+     * @param modal
+     * @param tabela
+     * @param elementoParaEditar
+     */
     public DlgEditElemento(java.awt.Frame parent, boolean modal, Tabela tabela, Elemento elementoParaEditar) {
         super(parent, modal);
         initComponents();
@@ -205,15 +218,30 @@ public class DlgEditElemento extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Retorna o constante CONFIRMAR se a criação/edição do elemento for confirmada ou o constante CANCELAR
+     * se o utilizador cancelar a operação
+     * @return
+     */
     public int getBotaoPressionado(){
         return botaoPressionado;
     }
     
     //Retorna o novo objeto tabela
+
+    /**
+     * Retorna o novo objeto Elemento criado quando o utilizador confirmou a operação. No caso da operação ser cancelada
+     * retorna null
+     * @return
+     */
     public Elemento getElemento(){
         return elemento;
     }
     
+    /**
+     * Confirma a criação de um novo objeto Elemento de acordo com os dados introduzidos em cada TextField.
+     * @param evt 
+     */
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         //Criação do elementos. Colunas não usadas serão null
         elemento = new Elemento(num, txtColuna1.getText(), txtColuna2.getText(), txtColuna3.getText(), txtColuna4.getText(),
@@ -227,6 +255,12 @@ public class DlgEditElemento extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    /**
+     * 1 - Modifica o texto dos Labels neste Dialog com base nos nomes que o utilizador deu às colunas da
+     * tabela a onde este elemento deve ser posto.
+     * 2 - Remove a visibilidade dos TextFields para as colunas que não existem na tabela a onde este
+     * elemento deve ser posto.
+     */
     private void prepararApresentacaoDaJanela(){
         //Nomes das colunas
         lblColuna1.setText(tabelaBase.getColuna1());

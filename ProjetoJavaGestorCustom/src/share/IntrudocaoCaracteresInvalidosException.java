@@ -11,14 +11,14 @@ package share;
 public class IntrudocaoCaracteresInvalidosException extends Exception{
     
     /**
-     * Creates a new instance of <code>OperacaoStockInvalidaException</code>
+     * Creates a new instance of <code>IntrudocaoCaracteresInvalidosException</code>
      * without detail message.
      */
     public IntrudocaoCaracteresInvalidosException() {
     }
 
     /**
-     * Constructs an instance of <code>OperacaoStockInvalidaException</code>
+     * Constructs an instance of <code>IntrudocaoCaracteresInvalidosException</code>
      * with the specified detail message.
      *
      * @param msg the detail message.

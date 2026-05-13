@@ -10,7 +10,7 @@ import java.sql.Connection;
 import business.model.ArrayListObservable;
 
 /**
- *
+ * Classe de serviço para todas as operações DAO para gestão de tabelas.
  * @author Fábio
  */
 public class TabelaService {

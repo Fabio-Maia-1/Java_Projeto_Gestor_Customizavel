@@ -21,12 +21,24 @@ public class TabelaDAO {
     private PreparedStatement pst = null;
     private ArrayListObservable<Tabela> lista;
 
-    
+    /**
+     *
+     * @param connection
+     * @throws Exception
+     */
     public TabelaDAO(Connection connection) throws Exception {
         this.ligacao = connection;
     }
     
     //Adicionar elemento à base de dados
+
+    /**
+     * Usa um query SQL para adicionar o objeto Tabela que recebe à base de dados na table "tabelas"
+     * de acordo com as suas propriedades
+     * @param t
+     * @return
+     * @throws Exception
+     */
     public Boolean guardar(Tabela t) throws Exception {
         if (t != null) {
             String stringSQL = "INSERT INTO tabelas(id, nome, descricao, numColunas, coluna1, coluna2, "
@@ -53,6 +65,13 @@ public class TabelaDAO {
         return false;
     }
     
+    /**
+     * Usa um query SQL para atualizar o membro da table "tabelas" que recebe com base no seu id.
+     * Cada uma das colunas é atualizada individualmente
+     * @param t
+     * @return
+     * @throws Exception
+     */
     public Boolean update(Tabela t) throws Exception {
         int id = t.getNumero();
         String sql = "";
@@ -74,6 +93,14 @@ public class TabelaDAO {
         return true;
     }
     
+    /**
+     * Recebe dois Strings. O primeiro é o nome original de uma table e o segundo é o nome para o qual
+     * se pretende alterar. Se os nomes forem diferentes, usa um query SQL para renomear a table.
+     * @param tAntiga
+     * @param tNova
+     * @return
+     * @throws Exception
+     */
     public Boolean updateTableName(Tabela tAntiga, Tabela tNova) throws Exception {
         String nomeAntigo = tAntiga.getNomeTabela();
         String nomeNovo = tNova.getNomeTabela();
@@ -90,6 +117,13 @@ public class TabelaDAO {
     }
     
     //Listar elementos da table na base de dados
+
+    /**
+     * Cria uma nova lista ArrayListObservable. Usa os dados da table "tabelas" para criar um novo objeto Tabela e
+     * insere esse objeto na lista. Retorna a lista preenchida.
+     * @return
+     * @throws Exception
+     */
     public ArrayListObservable findAll() throws Exception {
         lista = new ArrayListObservable<>();
         Tabela t = null;
@@ -108,8 +142,13 @@ public class TabelaDAO {
         }
         return lista;
     }
-    
-    //Igual ao findAll(), mas para a table "tabelasFavoritas"
+
+    /**
+     * Cria uma nova lista ArrayListObservable. Caso a coluna "favorito" esteja preenchida com "1", usa os dados da
+     * table "tabelas" para criar um novo objeto Tabela e insere esse objeto na lista. Retorna a lista preenchida.
+     * @return
+     * @throws Exception
+     */
     public ArrayListObservable findAllFavoritos() throws Exception {
         lista = new ArrayListObservable<>();
         Tabela t = null;
@@ -130,6 +169,13 @@ public class TabelaDAO {
         return lista;
     }
     
+    /**
+     * Recebe um objeto Tabela. Se a propriedade "favorito" for false, usa um query SQL para o marcar como favorito na
+     * base de dados. Se a propriedade "favorito" for true, usa um query SQL para o desmarcar como favorito.
+     * @param t
+     * @return
+     * @throws Exception
+     */
     public Boolean meterOuTirarFavorito(Tabela t) throws Exception {
         int id = t.getNumero();
         Boolean fav = t.getFavorito();
@@ -151,6 +197,11 @@ public class TabelaDAO {
         }
     }
     
+    /**
+     * Percorre a table "tabelas" inteira, anotando o ultimo id que recebe e retornando-o
+     * @return
+     * @throws Exception
+     */
     public int obterIdMaisRecente() throws Exception {
         int ultimoId = 0;
         String sql = "SELECT * FROM tabelas";
@@ -165,6 +216,12 @@ public class TabelaDAO {
         return ultimoId;
     }
     
+    /**
+     * Remove o objeto Tabela recebido da table "tabelas" com um query SQL.
+     * @param t
+     * @return
+     * @throws Exception
+     */
     public Boolean deleteRowById(Tabela t) throws Exception {
         if (t != null) {
             int id = t.getNumero();
@@ -180,7 +237,13 @@ public class TabelaDAO {
         return false;
     }
     
-        public Boolean criarNovaTabelaSQL(Tabela t)throws Exception{
+    /**
+     * Usa um query SQL para criar uma table nova na base de dados que partilhe o nome do objeto Tabela recebido.
+     * @param t
+     * @return
+     * @throws Exception
+     */
+    public Boolean criarNovaTabelaSQL(Tabela t)throws Exception{
         if (t != null) {
             String nome = t.getNomeTabela();
             String stringSQL = "create table " + nome + "(id int primary key, coluna1 varchar(100), " +
@@ -195,6 +258,12 @@ public class TabelaDAO {
         return false;
     }
     
+    /**
+     * Usa um query SQL para apagar a table na base de dados que partilhe o nome do objeto Tabela recebido.
+     * @param t
+     * @return
+     * @throws Exception
+     */
     public Boolean apagarTabela(Tabela t)throws Exception{
         if (t != null) {
             String nome = t.getNomeTabela();

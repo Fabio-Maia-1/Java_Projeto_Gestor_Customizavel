@@ -315,7 +315,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnTodos">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Todos"/>
+            <Property name="text" type="java.lang.String" value="Ver Todos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTodosActionPerformed"/>
@@ -323,7 +323,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnFavoritos">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Favoritos"/>
+            <Property name="text" type="java.lang.String" value="Ver Favoritos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFavoritosActionPerformed"/>

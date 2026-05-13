@@ -11,7 +11,6 @@ import business.model.Tabela;
 import business.service.ElementoService;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import share.Funcionalidades;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 
@@ -22,21 +21,22 @@ import javax.swing.JOptionPane;
 public class TabelaViewer extends javax.swing.JFrame {
     
     private ArrayListObservable<Elemento> listaElementos;
-    private Tabela tabelaBase; //Para saber os nomes de cada coluna
+    private Tabela tabelaBase;
     public Connection ligacao = null;
     private ElementoService elementoService = null;
-    private Funcionalidades funcao = null;
     private boolean mostrarTodos = true; //Quando a tabela recarrega, sabe se deve mostrar todos ou só os favoritos
 
     /**
      * Creates new form TabelaViewer
+     * @param tabela
+     * @param ligacao
      */
     public TabelaViewer(Tabela tabela, Connection ligacao) {
         initComponents();
         setLocationRelativeTo(null);//Janela aparece no meio do ecrã
         this.ligacao = ligacao;
         this.tabelaBase = tabela; //Para saber os nomes de cada coluna
-        this.funcao = new Funcionalidades();
+        btnTodos.setEnabled(false);
         
         lblTitulo.setText("    " + tabela.getNomeTabela().toUpperCase()); //Escrever titulo do jFrame
         this.setTitle("    " + tabela.getNomeTabela().toUpperCase());//Escrever nome da tabela na barra superior do JFrame
@@ -44,11 +44,12 @@ public class TabelaViewer extends javax.swing.JFrame {
         //Atualizar tabela com elementos da base de dados
         preencherTabelaComTodos();
         
-        //Permite interação com o rato
+
+        //Permite interações com o rato na tabela. 
         tblTabelaCustom.addMouseListener(new MouseAdapter() { 
             @Override
-            public void mouseClicked(MouseEvent e) { //Instruções
-                //Duplo clique abre uma sub-tabela
+            public void mouseClicked(MouseEvent e) {
+                //Duplo clique permite editar uma tabela
                 if (e.getClickCount() == 2 && tblTabelaCustom.getSelectedRow() > -1) {
                     editarElemento();
                 }
@@ -197,10 +198,10 @@ public class TabelaViewer extends javax.swing.JFrame {
             .addComponent(btnRetornar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        btnFavoritos.setText("Favoritos");
+        btnFavoritos.setText("Ver Favoritos");
         btnFavoritos.addActionListener(this::btnFavoritosActionPerformed);
 
-        btnTodos.setText("Todos");
+        btnTodos.setText("Ver Todos");
         btnTodos.addActionListener(this::btnTodosActionPerformed);
 
         mnuMain.setText("Main");
@@ -309,11 +310,15 @@ public class TabelaViewer extends javax.swing.JFrame {
 
     private void btnTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTodosActionPerformed
         mostrarTodos = true;
+        btnTodos.setEnabled(false);
+        btnFavoritos.setEnabled(true);
         recarregarTabela();
     }//GEN-LAST:event_btnTodosActionPerformed
 
     private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
         mostrarTodos = false;
+        btnTodos.setEnabled(true);
+        btnFavoritos.setEnabled(false);
         recarregarTabela();
     }//GEN-LAST:event_btnFavoritosActionPerformed
 
@@ -346,14 +351,13 @@ public class TabelaViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuApagarElementoActionPerformed
 
     private void mnuInstrucoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuInstrucoesActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
-        ////
-        ///
-        ///
-        ///////
+        JOptionPane.showMessageDialog(rootPane, mostarIntucoesGestaoElementos());
     }//GEN-LAST:event_mnuInstrucoesActionPerformed
 
+    /**
+     * Abre um JDialog para que o utilizador introduza dados e usa-os para criar um novo objeto da classe Elemento.
+     * Insere esse elemento numa lista ArrayListObservable e na base de dados
+     */
     private void adicionarElemento(){
         DlgEditElemento editorElemento = new DlgEditElemento(this, true, tabelaBase, ligacao);
         editorElemento.setVisible(true);
@@ -372,6 +376,9 @@ public class TabelaViewer extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Remove o elemento selecionado da lista de elementos e da base de dados
+     */
     private void apagarElemento(){
         if(tblTabelaCustom.getSelectedRow() > -1){
             try { //Apagar da table de acordo com o index da row selecionada
@@ -387,6 +394,9 @@ public class TabelaViewer extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Abre um JDialog novo com a informação do elemento selecionado. Guarda as mudanças na base de dados e na lista de elementos.
+     */
     private void editarElemento(){
          if (tblTabelaCustom.getSelectedRow() > -1) {
             int row = tblTabelaCustom.getSelectedRow();
@@ -420,7 +430,10 @@ public class TabelaViewer extends javax.swing.JFrame {
         }
     }
     
-    //Atualizar tabela com elementos da base de dados
+    /**
+     * Verifica os elemento guardados nesta tabela na base de dados e coloca-os todos numa lista ArrayListObservable.
+     * Controi o table model com base nessa lista e modifica a largura da primeira coluna da tabela.
+     */
     private void preencherTabelaComTodos(){
         try { 
             elementoService = new ElementoService(ligacao);
@@ -435,6 +448,11 @@ public class TabelaViewer extends javax.swing.JFrame {
         tblTabelaCustom.getColumnModel().getColumn(0).setMaxWidth(58); //Largura da 1ª coluna
     }
     
+    /**
+     * Verifica a coluna "favorito" de cada elemento guardado na base de dados e coloca aqueles com o valor "1" numa
+     * lista ArrayListObservable. Controi o TableModel com base nessa lisra para que apenas os favoritos sejam visiveis
+     * e modifica a largura da primeira coluna da tabela.
+     */
     private void preencherTabelaComFavoritos(){
         try { 
             elementoService = new ElementoService(ligacao);
@@ -449,10 +467,14 @@ public class TabelaViewer extends javax.swing.JFrame {
         tblTabelaCustom.getColumnModel().getColumn(0).setMaxWidth(58); //Largura da 1ª coluna
     }
     
+    /**
+     * Envia o elemento selecionado e a tabela atual para o DAO, a onde a propriedade "favorito" do elemento
+     * é marcada como true ou false com base no seu valor atual.
+     */
     public void adicionarOuRemoverDosFavoritos(){
         if (tblTabelaCustom.getSelectedRow() > -1) {
-            Integer row = tblTabelaCustom.getSelectedRow(); //Retorna linha selecionada       
-            Elemento elemento = listaElementos.get(row); //Retorna elemento da linha selecionada
+            Integer row = tblTabelaCustom.getSelectedRow(); //linha selecionada       
+            Elemento elemento = listaElementos.get(row); //elemento da linha selecionada
 
             try { //Marca como favorito ou remove dos favoritos
                 elementoService = new ElementoService(ligacao);
@@ -464,7 +486,28 @@ public class TabelaViewer extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Não está nada selecionado.");
         }
     }
-    
+
+    /**
+     * Devolve um texto formatado com instruções para as funcionalidades deste form.
+     * @return
+     */
+    public String mostarIntucoesGestaoElementos(){
+        String texto = "Obrigado por abrir o painel de instuções.\n\n"
+                + "Na barra superior, também pode encontrar os menus 'Main' e 'Manage', que permitem controlar o estado da\n"
+                + "aplicação ou executar operações de gestão de elementos, respetivamente.\n\n"
+                + "Descrição das funcionalidades: -----------------------------------------------------------------     \n\n"
+                + "Adicionar (Botão ou Tecla N) - Abre um painel para adicionar um elemento novo à tabela atual, respeitando\n"
+                + "as colunas definidas na criação da tabela. Pode usar o botão 'Confirmar' para guardar o novo elemento ou\n"
+                + "o botão 'Cancelar' para o descartar.\n\n"
+                + "Editar (Botão, Tecla E ou duplo-clique numa tabela) - Abre um painel para edição de elementos existentes.\n"
+                + "Qualquer característica pode ser editada.\n\n"
+                + "Apagar (Botão ou Tecla D) - Descarta o elemento selecionada.\n\n"
+                + "Adicionar aos Favoritos (Botão direito do rato num elemento) - Adiciona o elemento à lista de favoritos.\n\n"
+                + "Remover dos Favoritos (Botão direito do rato num elemento) - Remove o elemento da lista de favoritos.\n\n"
+                + "Ver Favoritos (Botão) - Mostra apenas os elementos desta tabela que estão marcados como favoritos.\n\n"
+                + "Ver Todos (Botão) - Revela todos os elementos que já foram criados para esta tabela.";    
+        return texto;
+    }
     
     
 

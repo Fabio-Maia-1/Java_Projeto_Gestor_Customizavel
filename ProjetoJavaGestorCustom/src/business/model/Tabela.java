@@ -6,7 +6,7 @@ package business.model;
 
 
 /**
- *
+ * Classe modelo para tabelas. Herda da classe Elemento
  * @author Fábio
  */
 public class Tabela extends Elemento{
@@ -25,6 +25,12 @@ public class Tabela extends Elemento{
         this.numColunas = numColunas;
     }
 
+    /**
+     * Recebe um index e retorna o contiudo da propriedade associada a esse index.
+     * Este metodo é usado no TabelaDAO.
+     * @param i
+     * @return 
+     */
     @Override
     public String retornarConteudoColuna(int i) {
         switch (i) {

@@ -10,11 +10,14 @@ import java.util.ArrayList;
  *
  * @author Fábio
  */
-public class Funcionalidades { //pesquisar pop-up menu
-    
-    //Funcionalidades para tratamento ou prevenção de excessões -------------------------
-    
-    //Impede a tentativa de criação de uma table com caracteres inválidos no seu nome.
+public class Funcionalidades {
+
+    /**
+     * Recebe um String e compara cada um dos seus caracteres a uma lista de caracteres inválidos para o nome de uma table numa
+     * base de dados. Caso seja encontrado algum caracter inválido, manda a exceção "IntrudocaoCaracteresInvalidosException".
+     * @param texto
+     * @throws IntrudocaoCaracteresInvalidosException
+     */
     public void verificarCaracteres(String texto) throws IntrudocaoCaracteresInvalidosException {
         char[] listaDeCaracteresInvalidos = {'<','>','"','(',')','!','?',',','.',':',';','#','$','&','*','+','-','/','\\','=','@','%','\''};   
         String caracteres = "";
@@ -35,6 +38,12 @@ public class Funcionalidades { //pesquisar pop-up menu
         }
     }
     
+    /**
+     * Recebe um String e compara o seu primeiro caracter a uma lista com todos os números que podem ser representados
+     * no formato char. Caso a comparação tenha resultado positivo, manda a exceção "verificarSeNomeComecaComNumero".
+     * @param texto
+     * @throws NomeComecaComNumeroExeption
+     */
     public void verificarSeNomeComecaComNumero(String texto) throws NomeComecaComNumeroExeption{
         char[] listaDeNumeros = {'0','1','2','3','4','5','6','7','8','9'};
         for (char numero : listaDeNumeros){
@@ -44,7 +53,12 @@ public class Funcionalidades { //pesquisar pop-up menu
         }       
     }
     
-    
+    /**
+     * Recebe um String e devolve um String idêntico, mas com todos os espaços substituídos por '_'
+     * @param nome
+     * @return
+     * @throws NomeDaTabelaEstaVazioExeption
+     */
     public String corrigirEspacosNosNomes(String nome) throws NomeDaTabelaEstaVazioExeption{
         String nomeCorrigido = "";
         
@@ -61,8 +75,4 @@ public class Funcionalidades { //pesquisar pop-up menu
         }
         return nomeCorrigido;
     }
-    
-    //Metodos especificos a uma determinada classe devem estar nessa classe
-    //Funcionalidades Extra ---------------------------------------------------------------
-    
 }

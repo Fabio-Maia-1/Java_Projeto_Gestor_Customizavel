@@ -11,7 +11,7 @@ import java.sql.Connection;
 import persistence.dao.ElementoDAO;
 
 /**
- *
+ * Classe de serviço para todas as operações DAO para gestão de elementos em tabelas.
  * @author Fábio
  */
 public class ElementoService {

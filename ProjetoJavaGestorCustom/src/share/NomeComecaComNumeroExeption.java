@@ -11,14 +11,14 @@ package share;
 public class NomeComecaComNumeroExeption extends Exception{
     
     /**
-     * Creates a new instance of <code>OperacaoStockInvalidaException</code>
+     * Creates a new instance of <code>NomeComecaComNumeroExeption</code>
      * without detail message.
      */
     public NomeComecaComNumeroExeption() {
     }
 
     /**
-     * Constructs an instance of <code>OperacaoStockInvalidaException</code>
+     * Constructs an instance of <code>NomeComecaComNumeroExeption</code>
      * with the specified detail message.
      *
      * @param msg the detail message.

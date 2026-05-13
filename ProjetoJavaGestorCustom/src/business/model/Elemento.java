@@ -4,10 +4,9 @@
  */
 package business.model;
 
-import java.util.Objects;
 
 /**
- *
+ * Classe modelo para elementos de tabelas.
  * @author Fábio
  */
 public class Elemento {
@@ -38,6 +37,12 @@ public class Elemento {
         this.favorito = favorito;
     }
     
+    /**
+     * Recebe um index e retorna o contiudo da propriedade associada a esse index.
+     * Este metodo é usado no ElementoDAO.
+     * @param i
+     * @return 
+     */
     public String retornarConteudoColuna(int i){
         switch (i) {
             case 1:

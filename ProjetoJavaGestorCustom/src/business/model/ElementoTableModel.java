@@ -1,17 +1,14 @@
 
 package business.model;
 
-import share.Funcionalidades;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import javax.swing.table.AbstractTableModel;
 
 
-//Adicionar ao construtor da classse onde a jtable está a ser adicionada
-        //ArrayListBasedTableModel TableModel = new ElementoTableModel(Class.class, colecao);
-        //tabela.setModel(TableModel);
 
 /**
+ * Adicionar ao construtor da classse onde a jtable está a ser adicionada
     @author ruiboticas
     @version 2.0
     @param <T>
