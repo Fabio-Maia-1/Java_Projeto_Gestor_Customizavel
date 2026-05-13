@@ -41,7 +41,7 @@ Na barra menu superior, o utilizador pode selecionar "Main" e depois "Encerrar A
 - Apagar (Tecla D): Remove a tabela selecionada do programa e da base de dados.
 - Abrir (Tecla A): Abre a tabela selecionada, permitindo a visualização e gestão dos elementos dessa tabela. A estrutura da tabela depende daquilo que o utilizador introduziu quando a criou. Esta funcionalidade também pode ser ativada a partir de um duplo clique na tabela desejada.
 Se clicar numa tabela com o botão direito do rato, será aberto um menu pop-up com a opção "Adicionar aos Favoritos" que a vai marcar como favorita. Se repetir a operação numa tabela que já está marcada como favorita, será aberto um menu com a opção "Remover dos Favoritos".
-No canto superior direito da aplicação estão mais 2 botões. O botão "Favoritos" filtra a lista de tabelas para que apenas as tabelas marcadas como favoritas sejam exibidas. O botão "Todos" volta a exibir todas as tabelas guardadas na base de dados.
+No canto superior direito da aplicação estão mais 2 botões. O botão "Ver Favoritos" filtra a lista de tabelas para que apenas as tabelas marcadas como favoritas sejam exibidas. O botão "Ver Todos" volta a exibir todas as tabelas guardadas na base de dados.
 
 Instruções para a gestão de elementos de tabelas:
 
@@ -50,4 +50,4 @@ Na barra menu, para além da opção "Encerrar Aplicação", o menu "Main" tamb�
 - Adicionar (Tecla N): Abre um painel que permite adicionar elementos novos à tabela do utilizador, respeitando o número de colunas definido na criação da tabela. Depois de preencher as colunas desejadas, o utilizador deve pressionar o botão "Confirmar" para guardar o novo elemento ou o botão "Cancelar" para o descartar.
 - Editar (Tecla E): Abre um painel funcionalmente idêntico ao painel de adição de elementos na tabela, permitindo editar qualquer característica do elemento selecionado.
 - Apagar (Tecla D): Remove o elemento selecionada da tabela.
-As funcionalidades de gestão de favoritos continuam a estar presentes nesta página, funcionando da mesma forma. Ou seja, os elementos podem ser marcados como favoritos e desmarcados com o botão direito do rato e os elementos favoritos podem ser filtrados a partir dos botões "Favoritos" e "Todos" no canto superior esquerdo da página.
+As funcionalidades de gestão de favoritos continuam a estar presentes nesta página, funcionando da mesma forma. Ou seja, os elementos podem ser marcados como favoritos e desmarcados com o botão direito do rato e os elementos favoritos podem ser filtrados a partir dos botões "Ver Favoritos" e "Ver Todos" no canto superior esquerdo da página.
